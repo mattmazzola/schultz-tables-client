@@ -19,6 +19,7 @@
     "@types/node": "^8.5.7",
     "@types/react": "^16.0.34",
     "@types/react-dom": "^16.0.3",
-    "@types/react-router-dom": "^4.2.3"
+    "@types/react-router-dom": "^4.2.3",
+    "redux-auth-wrapper": "^2.0.2"
   }
 }
