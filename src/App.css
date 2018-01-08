@@ -1,0 +1,105 @@
+:root {
+  --main-column-min-width: 500px
+}
+.app-header {
+  background: #0081ff;
+  background: -webkit-linear-gradient(170deg, #0081ff, #58eddf);
+  background: -o-linear-gradient(170deg, #0081ff, #58eddf);
+  background: -moz-linear-gradient(170deg, #0081ff, #58eddf);
+  background: linear-gradient(170deg, #0081ff, #58eddf);
+  -webkit-box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.36);
+  -moz-box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.36);
+  box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.36);
+  
+  color: white;
+  display: grid;
+  grid-template-columns: 1fr 600px 1fr;
+}
+.app-header > * {
+  grid-column: 2
+}
+
+.app-content {
+  padding: 2em 0;
+  display: grid;
+  grid-template-columns: 1fr 600px 1fr;
+}
+.app-content > * {
+  grid-column: 2
+}
+
+nav a {
+    color: inherit;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+}
+nav .link {
+    display: grid;
+    grid-template-columns: [full-start] 20px [icon-start] 30px [icon-end] 20px [full-end];
+    grid-template-rows: 30px;
+}
+nav .icon {
+    grid-row: 1;
+    grid-column: icon;
+    text-align: center;
+}
+
+nav .label {
+    grid-row: 2;
+    grid-column: full;
+    text-align: center;
+}
+
+
+nav > a {
+  padding: 0.75em 0.5em;
+  font-size: 1rem;
+  text-decoration: none;
+  color: white;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+}
+
+nav > a.active {
+    background-color: rgba(0,0,0,0.1);
+    border-bottom-color: rgba(0,0,0,0.7);
+}
+
+nav > a:active {
+    color: white;
+}
+
+nav > a:hover:not(.active) {
+    background-color: rgba(0,0,0,0.05)
+}
+
+main {
+  padding: 2em 0;
+  display: grid;
+  grid-template-columns: [full-start] minmax(1em, 1fr) [main-start] minmax(var(--main-column-min-width), 90vw) [main-end] minmax(1em, 1fr) [full-end];
+}
+
+@media (min-width: 501px) and (max-width: 800px) {
+  main {
+    grid-template-columns: [full-start] minmax(1em, 1fr) [main-start] minmax(var(--main-column-min-width), 80vw) [main-end] minmax(1em, 1fr) [full-end];
+  }
+}
+
+@media (min-width: 801px) and (max-width: 1200px) {
+  main {
+    grid-template-columns: [full-start] minmax(1em, 1fr) [main-start] minmax(var(--main-column-min-width), 65vw) [main-end] minmax(1em, 1fr) [full-end];
+  }
+}
+
+@media (min-width: 1201px) {
+  main {
+    grid-template-columns: [full-start] minmax(1em, 1fr) [main-start] minmax(var(--main-column-min-width), 50vw) [main-end] minmax(1em, 1fr) [full-end];
+  }
+}
+
+main > * {
+  grid-column: main;
+}

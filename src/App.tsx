@@ -10,6 +10,7 @@ import {
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper'
 import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect'
 import { State } from './types'
+import './App.css'
 import Home from './Home'
 import Login from './Login'
 import Scores from './Scores'
@@ -49,24 +50,38 @@ class App extends React.Component<Props, {}> {
     return (
       <Router>
         <div className="app">
-          <div className="app-header">
-            <h2>Schultz Tables</h2>
-          </div>
-          <nav>
-            <ul>
-              <li><NavLink to="/" exact={true}>Home</NavLink></li>
-              <li><NavLink to="/scores" exact={true}>Scores</NavLink></li>
-              <li><NavLink to="/users" exact={true}>User</NavLink></li>
-              {this.props.user.isLoggedIn && <li><NavLink to="/profile" exact={true}>Profile</NavLink></li>}
-            </ul>
-          </nav>
-          <div>
+          <header className="app-header">
+            <div>
+              <div className="banner">
+                <h2>Schultz Tables</h2>
+              </div>
+              <nav>
+                <NavLink className="link" to="/" exact={true}>
+                  <div className="icon"><i className="material-icons">home</i></div>
+                  <div className="label">Home</div>
+                </NavLink>
+                <NavLink className="link" to="/scores" exact={true}>
+                  <div className="icon"><i className="material-icons">format_list_numbered</i></div>
+                  <div className="label">Scores</div>
+                </NavLink>
+                <NavLink className="link" to="/users" exact={true}>
+                  <div className="icon"><i className="material-icons">group</i></div>
+                  <div className="label">User</div>
+                </NavLink>
+                {this.props.user.isLoggedIn && <NavLink className="link" to="/profile" exact={true}>
+                  <div className="icon"><i className="material-icons">account_circle</i></div>
+                  <div className="label">Profile</div>
+                </NavLink>}
+              </nav>
+            </div>
+          </header>
+          <main>
             <Route path="/" exact={true} component={ProtectedHome} />
             <Route path="/login" exact={true} component={RedirectedLogin} />
             <Route path="/scores" exact={true} component={ProtectedScores} />
             <Route path="/users" exact={true} component={ProtectedUsers} />
             <Route path="/profile" exact={true} component={ProtectedProfile} />
-          </div>
+          </main>
         </div>
       </Router>
     );
