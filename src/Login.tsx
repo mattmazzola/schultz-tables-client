@@ -4,17 +4,29 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { login } from './actions'
 import { State } from './types'
+import RSA from 'react-simple-auth'
+import { microsoftProvider } from './providers/microsoft'
 
 class Login extends React.Component<Props, {}> {
+    async onClickLogin() {
+        try {
+            const session = await RSA.acquireTokenAsync(microsoftProvider)
+            const { login } = this.props
+            login(session.decodedIdToken.oid, session.decodedIdToken.name)
+        } catch (error) {
+            throw error
+        }
+    }
+
     render() {
-        const { user, login } = this.props
+        const { user } = this.props
         return (
             <div>
                 <h1>Login</h1>
                 <div>
                     IsLoggedIn {user.isLoggedIn ? 'true' : 'false'}
                 </div>
-                <button type="button" onClick={() => login("matt", "mazzola")}>Login</button>
+                <button type="button" onClick={() => this.onClickLogin()}>Login</button>
             </div>
         )
     }

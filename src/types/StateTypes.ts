@@ -4,6 +4,7 @@ export type ScoresState = Score[]
 
 export interface UserState {
     isLoggedIn: boolean
+    id: string
     name: string
 }
 

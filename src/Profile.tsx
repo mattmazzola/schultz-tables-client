@@ -7,9 +7,11 @@ import { State } from './types'
 
 class Profile extends React.Component<Props, {}> {
   render() {
+    const { user, logout } = this.props
     return (
       <div>
         <h1>Profile</h1>
+        <p>{user.id}: {user.name}</p>
         <button type="button" onClick={() => logout()}>Logout</button>
       </div>
     );
