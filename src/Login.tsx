@@ -6,6 +6,7 @@ import { login } from './actions'
 import { State } from './types'
 import RSA from 'react-simple-auth'
 import { microsoftProvider } from './providers/microsoft'
+import './Login.css'
 
 class Login extends React.Component<Props, {}> {
     async onClickLogin() {
@@ -19,14 +20,9 @@ class Login extends React.Component<Props, {}> {
     }
 
     render() {
-        const { user } = this.props
         return (
-            <div>
-                <h1>Login</h1>
-                <div>
-                    IsLoggedIn {user.isLoggedIn ? 'true' : 'false'}
-                </div>
-                <button type="button" onClick={() => this.onClickLogin()}>Login</button>
+            <div className="login-page">
+                <button className="login-button" type="button" onClick={() => this.onClickLogin()}>Login</button>
             </div>
         )
     }

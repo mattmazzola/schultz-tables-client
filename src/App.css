@@ -1,6 +1,11 @@
 :root {
   --main-column-min-width: 500px
 }
+
+body {
+  background: rgba(0,0,0,0.2);
+}
+
 .app-header {
   background: #0081ff;
   background: -webkit-linear-gradient(170deg, #0081ff, #58eddf);
@@ -17,6 +22,11 @@
 }
 .app-header > * {
   grid-column: 2
+}
+
+.app-header .banner {
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 .app-content {
