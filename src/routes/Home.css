@@ -50,3 +50,23 @@
   font-size: 1.2rem;
   padding: 0.25em 0.5em;
 }
+
+.game-preview {
+  position: relative;
+  height: 400px;
+  justify-self: stretch;
+}
+
+.game-preview--expand {
+  position: static;
+}
+
+.game-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+}
