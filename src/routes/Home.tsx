@@ -1,7 +1,9 @@
 import * as React from 'react'
 import './Home.css'
+import Game from '../components/Game'
 
 interface State {
+  isGameVisible: boolean
   gameTypes: string[]
   gameTypeSelected: string
   width: number
@@ -9,6 +11,7 @@ interface State {
 }
 
 const initialState: State = {
+  isGameVisible: false,
   gameTypes: [
     'Standard',
     'Medium',
@@ -157,6 +160,8 @@ export default class Home extends React.Component<{}, State> {
               <option key={i} value={gameType}>{gameType}</option>
             )}
           </select>
+
+          {this.state.isGameVisible && <Game />}
 
         </div>
       </div>

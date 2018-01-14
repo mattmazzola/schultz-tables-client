@@ -2,8 +2,8 @@ import * as React from 'react'
 import { returntypeof } from 'react-redux-typescript';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { addScore } from './actions/scoresActions'
-import { State } from './types'
+import { addScore } from '../actions/scoresActions'
+import { State } from '../types'
 
 class Scores extends React.Component<Props, {}> {
   render() {

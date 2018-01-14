@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom'
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper'
 import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect'
-import { State } from './types'
+import { State } from '../types'
 import './App.css'
 import Home from './Home'
 import Login from './Login'

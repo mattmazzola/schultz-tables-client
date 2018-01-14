@@ -2,10 +2,10 @@ import * as React from 'react'
 import { returntypeof } from 'react-redux-typescript'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { login } from './actions'
-import { State } from './types'
+import { login } from '../actions'
+import { State } from '../types'
 import RSA from 'react-simple-auth'
-import { microsoftProvider } from './providers/microsoft'
+import { microsoftProvider } from '../providers/microsoft'
 import './Login.css'
 
 class Login extends React.Component<Props, {}> {

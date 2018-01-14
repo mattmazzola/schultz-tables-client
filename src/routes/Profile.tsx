@@ -2,8 +2,8 @@ import * as React from 'react'
 import { returntypeof } from 'react-redux-typescript'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { logout } from './actions'
-import { State } from './types'
+import { logout } from '../actions'
+import { State } from '../types'
 
 class Profile extends React.Component<Props, {}> {
   render() {
