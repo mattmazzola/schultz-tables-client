@@ -42,3 +42,8 @@ export interface ITable {
     expectedSequence: any[]
     cells: ICell[]
 }
+
+export interface IOption {
+    id: string
+    name: string
+}

@@ -2,7 +2,7 @@
   background: rgba(51,51,51,1);
   display: grid;
   grid-template: min-content 1fr min-content / auto;
-  grid-gap: 1em;
+  grid-gap: 2em;
   padding: 2em;
   width: 100%;
   color: white;
@@ -15,10 +15,20 @@
 
 .game__footer {
   display: grid;
-  grid-template: auto / repeat(auto-fit, minmax(20px, auto));
+  grid-template: auto / repeat(auto-fit, minmax(1.5em, auto));
+  line-height: 1.5
 }
 
 .game__table {
+  position: relative;
+}
+
+.table {
+  position: absolute;
+  left: 0;
+  width: 600px;
+  top: 0;
+  bottom: 0;
   display: grid;
   grid-template: repeat(5, 1fr)/repeat(5, 1fr);
   grid-gap: 1px;
