@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux'
 import scoresReducer from './scoresReducer'
 import userReducer from './userReducer'
-import { State } from '../types'
+import usersReducer from './usersReducer'
+import { ReduxState } from '../types'
 
-export default combineReducers<State>({
+export default combineReducers<ReduxState>({
     user: userReducer,
+    users: usersReducer,
     scores: scoresReducer
 })

@@ -3,7 +3,7 @@ import { returntypeof } from 'react-redux-typescript';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { addScore } from '../actions/scoresActions'
-import { State } from '../types'
+import { ReduxState } from '../types'
 
 class Scores extends React.Component<Props, {}> {
   render() {
@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch: any) => {
     addScore
   }, dispatch)
 }
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: ReduxState) => {
   return {
     scores: state.scores
   }

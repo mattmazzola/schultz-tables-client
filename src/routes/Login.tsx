@@ -3,7 +3,7 @@ import { returntypeof } from 'react-redux-typescript'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { login } from '../actions'
-import { State } from '../types'
+import { ReduxState } from '../types'
 import RSA from 'react-simple-auth'
 import { microsoftProvider } from '../providers/microsoft'
 import './Login.css'
@@ -32,7 +32,7 @@ const mapDispatchToProps = (dispatch: any) => {
         login
     }, dispatch)
 }
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: ReduxState) => {
     return {
         user: state.user
     }

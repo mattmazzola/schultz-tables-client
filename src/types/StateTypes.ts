@@ -1,6 +1,9 @@
 import { Score } from './ActionObjects'
+import * as models from './models'
 
 export type ScoresState = Score[]
+
+export type UsersState = models.IUser[]
 
 export interface UserState {
     isLoggedIn: boolean
@@ -8,7 +11,8 @@ export interface UserState {
     name: string
 }
 
-export interface State {
+export interface ReduxState {
     user: UserState
+    users: UsersState
     scores: ScoresState
 }

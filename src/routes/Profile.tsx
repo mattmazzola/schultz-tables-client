@@ -3,7 +3,7 @@ import { returntypeof } from 'react-redux-typescript'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { logout } from '../actions'
-import { State } from '../types'
+import { ReduxState } from '../types'
 
 class Profile extends React.Component<Props, {}> {
   render() {
@@ -23,7 +23,7 @@ const mapDispatchToProps = (dispatch: any) => {
       logout
   }, dispatch)
 }
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: ReduxState) => {
   return {
       user: state.user
   }

@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom'
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper'
 import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect'
-import { State } from '../types'
+import { ReduxState } from '../types'
 import './App.css'
 import Home from './Home'
 import Login from './Login'
@@ -17,7 +17,7 @@ import Scores from './Scores'
 import Users from './Users'
 import Profile from './Profile'
 
-const userIsAuthenticated = connectedRouterRedirect<any, State>({
+const userIsAuthenticated = connectedRouterRedirect<any, ReduxState>({
   // The url to redirect user to if they fail
   redirectPath: '/login',
   // Determine if the user is authenticated or not
@@ -27,7 +27,7 @@ const userIsAuthenticated = connectedRouterRedirect<any, State>({
 })
 
 const locationHelper = locationHelperBuilder({})
-const userIsNotAuthenticated = connectedRouterRedirect<any, State>({
+const userIsNotAuthenticated = connectedRouterRedirect<any, ReduxState>({
   // This sends the user either to the query param route if we have one, or to the landing page if none is specified and the user is already logged in
   redirectPath: (state, ownProps) => locationHelper.getRedirectQueryParam(ownProps) || '/',
   // This prevents us from adding the query parameter when we send the user away from the login page
@@ -92,7 +92,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
   }, dispatch)
 }
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: ReduxState) => {
   return {
     user: state.user
   }

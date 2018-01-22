@@ -11,12 +11,14 @@
 .game__header {
   display: grid;
   grid-template: auto / 1fr min-content;
+  font-size: 2rem;
 }
 
 .game__footer {
   display: grid;
   grid-template: auto / repeat(auto-fit, minmax(1.5em, auto));
-  line-height: 1.5
+  line-height: 1.5;
+  font-size: 2rem;
 }
 
 .game__table {
@@ -32,7 +34,6 @@
   display: grid;
   grid-template: repeat(5, 1fr)/repeat(5, 1fr);
   grid-gap: 1px;
-  padding: 0 2em;
   color: rgba(51,51,51,1);
 }
 
@@ -45,4 +46,5 @@
   font-weight: bold;
   cursor: pointer;
   background: white;
+  font-size: 3rem;
 }

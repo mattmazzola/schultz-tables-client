@@ -47,3 +47,9 @@ export interface IOption {
     id: string
     name: string
 }
+
+export interface IUser {
+    email: string
+    name: string
+    id: string
+}
