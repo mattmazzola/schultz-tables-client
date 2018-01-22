@@ -1,9 +1,33 @@
 import AT from './ActionTypes'
 import * as models from './models'
 
-export interface AddScoreAction {
-    type: AT.ADD_SCORE
+export interface StartScoreAsync {
+    type: AT.START_SCORE_ASYNC
+}
+
+export interface StartScoreFulfilled {
+    type: AT.START_SCORE_FULFILLED
+    value: string
+}
+
+export interface StartScoreRejected {
+    type: AT.START_SCORE_REJECTED
+    reason: string
+}
+
+export interface AddScoreAsync {
+    type: AT.ADD_SCORE_ASYNC
+    score: models.IScoreRequest
+}
+
+export interface AddScoreFulfilled {
+    type: AT.ADD_SCORE_FULFILLED
     score: models.IScore
+}
+
+export interface AddScoreRejected {
+    type: AT.ADD_SCORE_REJECTED
+    reason: string
 }
 
 export interface UserLoginAction {
@@ -46,7 +70,12 @@ export interface GetScoresRejectedAction {
 }
 
 export type ActionObject =
-    AddScoreAction |
+    StartScoreAsync |
+    StartScoreFulfilled |
+    StartScoreRejected |
+    AddScoreAsync |
+    AddScoreFulfilled |
+    AddScoreRejected |
     UserLoginAction |
     UserLogoutAction |
     GetUsersAsyncAction |

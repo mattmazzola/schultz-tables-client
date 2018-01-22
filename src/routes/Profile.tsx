@@ -4,15 +4,15 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { logout } from '../actions'
 import { ReduxState } from '../types'
+import './Profile.css'
 
 class Profile extends React.Component<Props, {}> {
   render() {
     const { user, logout } = this.props
     return (
       <div>
-        <h1>Profile</h1>
-        <p>{user.id}: {user.name}</p>
-        <button type="button" onClick={() => logout()}>Logout</button>
+        <h1>{user.name}</h1>
+        <button className="button-logout" type="button" onClick={() => logout()}>Logout</button>
       </div>
     );
   }

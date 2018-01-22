@@ -27,6 +27,12 @@ export interface IUserSelection {
     cell: ICell
 }
 
+export interface IChosenCell {
+    text: string
+    used: boolean
+    current: boolean
+}
+
 export interface IGameState {
     startTime: Date
     duration: number
@@ -39,7 +45,7 @@ export interface IGameState {
 }
 
 export interface ITable {
-    expectedSequence: any[]
+    expectedSequence: string[]
     cells: ICell[]
 }
 
@@ -66,4 +72,33 @@ export interface IScore {
     scoreDetailsId: string
     userId: string
     user: IUser | undefined
+}
+
+export interface IScoreRequest {
+    duration: number
+    endTime: Date
+    expectedSequence: number[]
+    randomizedSequence: number[]
+    signedStartTime: string
+    startTime: Date
+    tableHeight: number
+    tableWidth: number
+    tableProperties: string[]
+    userSequence: IUserSelection[]
+}
+
+export interface IScoreResponse {
+    duration: string
+    durationMilliseconds: number
+    endTime: string
+    id: string
+    sequence: IUserSelection[]
+    startTime: string
+    tableLayoutId: string
+    tableTypeId: string
+    userId: string
+}
+
+export interface IStartScoreResponse {
+    value: string
 }

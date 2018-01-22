@@ -17,7 +17,7 @@ class Scores extends React.Component<Props, {}> {
     return (
       <div className="scores">
           {this.props.scores.map((score, i) =>
-            <div className="score" key={i}>{score.user!.name} - {score.durationMilliseconds}</div>
+            <div className="score" key={i}>{score.user ? score.user.name : 'Unknown'} - {score.durationMilliseconds}</div>
           )}
       </div>
     );

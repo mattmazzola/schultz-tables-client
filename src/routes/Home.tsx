@@ -1,4 +1,9 @@
 import * as React from 'react'
+import { returntypeof } from 'react-redux-typescript';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { startScoreThunkAsync, addScoreThunkAsync } from '../actions/scoresActions'
+import { ReduxState } from '../types'
 import './Home.css'
 import * as models from '../types/models'
 import * as utilities from '../services/utilities'
@@ -13,6 +18,7 @@ interface State {
   gameTypeSelected: string
   width: number
   height: number
+  signedStartTime: string | null
   symbols: string[]
   symbolsSelected: string
   fonts: string[]
@@ -45,6 +51,7 @@ const initialState: State = {
   gameTypeSelected: 'Standard',
   width: 5,
   height: 5,
+  signedStartTime: null,
   symbols: [
     'a',
     'b',
@@ -72,19 +79,31 @@ const initialState: State = {
   gameState: utilities.generateDefaultGameState()
 }
 
-export default class Home extends React.Component<{}, State> {
+export class Home extends React.Component<Props, State> {
   state = initialState
 
   onClickStart() {
     console.log(`onClickStart`)
-    this.setState({
-      isGameVisible: true
-    })
+    const startScoreThunkAsync: () => Promise<string> = this.props.startScoreThunkAsync as any
+    
+    startScoreThunkAsync()
+      .then(signedStartTime => {
+        this.setState({
+          signedStartTime,
+          isGameVisible: true,
+          gameState: {
+            ...this.state.gameState,
+            startTime: new Date(),
+            isStarted: true
+          }
+        })
+      })
   }
 
   onClickCloseGame = () => {
     this.setState({
-      isGameVisible: false
+      isGameVisible: false,
+      gameState: utilities.generateDefaultGameState()
     })
   }
 
@@ -115,6 +134,61 @@ export default class Home extends React.Component<{}, State> {
     const font = event.target.value
     this.setState({
       fontSelected: font
+    })
+  }
+
+  onClickCell = (cell: models.ICell) => {
+    this.setState(prevState => {
+
+      const prevGameState = prevState.gameState
+      let isCompleted = prevGameState.isCompleted
+      if (isCompleted) {
+        return prevState
+      }
+
+      const expectedSymbol = prevState.table.expectedSequence[prevGameState.expectedSymbolIndex]
+      const correct = cell.text === expectedSymbol
+      let expectedSymbolIndex = prevGameState.expectedSymbolIndex
+      let duration = prevGameState.duration
+
+      if (correct) {
+        if (expectedSymbolIndex === prevState.table.expectedSequence.length - 1) {
+          isCompleted = true
+          const endTime = new Date()
+          duration = endTime.getTime() - prevGameState.startTime.getTime()
+
+          const scoreRequest: models.IScoreRequest = {
+            duration,
+            endTime,
+            expectedSequence: prevState.table.expectedSequence.map(s => parseInt(s)),
+            // TODO: API should accept cells so we can do analysis on harder arangement of numbers
+            randomizedSequence: prevState.table.cells.map(c => parseInt(c.text)),
+            signedStartTime: prevState.signedStartTime!,
+            startTime: prevState.gameState.startTime,
+            tableHeight: prevState.height,
+            tableProperties: [],
+            tableWidth: prevState.width,
+            userSequence: prevGameState.userSequence
+          }
+
+          this.props.addScoreThunkAsync(scoreRequest)
+        }
+        expectedSymbolIndex += 1
+      }
+
+      return {
+        gameState: {
+          ...prevGameState,
+          duration,
+          expectedSymbolIndex,
+          isCompleted,
+          userSequence: [...prevGameState.userSequence, {
+            correct,
+            time: new Date(),
+            cell
+          }],
+        }
+      }
     })
   }
 
@@ -248,9 +322,28 @@ export default class Home extends React.Component<{}, State> {
               table={this.state.table}
               gameState={this.state.gameState}
               onClickClose={this.onClickCloseGame}
+              onClickCell={this.onClickCell}
             />
           </div>}
       </div>
     )
   }
 }
+
+const mapDispatchToProps = (dispatch: any) => {
+  return bindActionCreators({
+    startScoreThunkAsync,
+    addScoreThunkAsync
+  }, dispatch)
+}
+const mapStateToProps = (state: ReduxState) => {
+  return {
+  }
+}
+
+// Props types inferred from mapStateToProps & dispatchToProps
+const stateProps = returntypeof(mapStateToProps);
+const dispatchProps = returntypeof(mapDispatchToProps);
+type Props = typeof stateProps & typeof dispatchProps;
+
+export default connect<typeof stateProps, typeof dispatchProps, {}>(mapStateToProps, mapDispatchToProps)(Home)

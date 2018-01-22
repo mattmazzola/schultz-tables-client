@@ -15,10 +15,12 @@ interface Props {
     table: models.ITable
     gameState: models.IGameState
     onClickClose: () => void
+    onClickCell: (cell: models.ICell) => void
 }
 
 interface State {
     position: Position
+    chosenSequence: models.IChosenCell[]
 }
 
 const initialState: State = {
@@ -29,12 +31,23 @@ const initialState: State = {
         bottom: 0,
         width: `100px`,
         height: `100px`
-    }
+    },
+    chosenSequence: []
 }
 
 export default class Game extends React.Component<Props, State> {
     state = initialState
     element: HTMLElement
+
+    constructor(props: Props) {
+        super(props)
+
+        this.state.chosenSequence = props.table.expectedSequence.map((s, i) => ({
+            text: s,
+            used: false,
+            current: i === 0
+        }))
+    }
 
     componentWillMount() {
         window.addEventListener("resize", this.onResize)
@@ -42,6 +55,18 @@ export default class Game extends React.Component<Props, State> {
 
     componentDidMount() {
         this.computeTablePosition()
+    }
+
+    componentWillReceiveProps(nextProps: Props) {
+        const chosenSequence = nextProps.table.expectedSequence.map((s, i) => ({
+            text: s,
+            used: i < nextProps.gameState.expectedSymbolIndex,
+            current: i === nextProps.gameState.expectedSymbolIndex
+        }))
+
+        this.setState({
+            chosenSequence
+        })
     }
 
     componentWillUnmount() {
@@ -85,22 +110,22 @@ export default class Game extends React.Component<Props, State> {
             <div className="game">
                 <header className="game__header">
                     <div>
-                        Header
+                        {this.props.gameState.isCompleted ? `Finished ${this.props.gameState.duration / 1000}` : ''}
                     </div>
-                    <button onClick={() => this.props.onClickClose()}>Close</button>
+                    <button className={`button-close ${this.props.gameState.isCompleted ? 'button-close--completed' : ''}`} type="button" onClick={() => this.props.onClickClose()}><i className="icon-close material-icons">clear</i></button>
                 </header>
                 <div className="game__table" ref={this.onRef}>
                     <div className="table" style={this.state.position}>
                         {this.props.table.cells.map((cell, i) =>
-                            <div key={i} className="table__cell">
+                            <div key={i} className="table__cell" onClick={() => this.props.onClickCell(cell)}>
                                 {cell.text}
                             </div>
                         )}
                     </div>
                 </div>
                 <footer className="game__footer">
-                    {this.props.table.expectedSequence.map((symbol, i) =>
-                        <div className="game-symbol" key={i}>{symbol}</div>
+                    {this.state.chosenSequence.map((symbol, i) =>
+                        <div className={`game-symbol ${symbol.used ? 'game-symbol--used': ''} ${symbol.current ? 'game-symbol--current': ''}`} key={i}>{symbol.text}</div>
                     )}
                 </footer>
             </div>
