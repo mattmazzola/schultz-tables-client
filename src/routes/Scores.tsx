@@ -2,22 +2,23 @@ import * as React from 'react'
 import { returntypeof } from 'react-redux-typescript';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { addScore } from '../actions/scoresActions'
+import { getScoresThunkAsync } from '../actions/scoresActions'
 import { ReduxState } from '../types'
+import './Scores.css'
 
 class Scores extends React.Component<Props, {}> {
+  componentWillMount() {
+    if (this.props.scores.length === 0) {
+      this.props.getScoresThunkAsync()
+    }
+  }
+
   render() {
     return (
-      <div>
-        <h1>Scores</h1>
-        <div>
-          <button type="button" onClick={() => this.props.addScore({ name: `Score-${(new Date().getTime())}`, value: (Math.floor(Math.random() * 100)) })}>Add Score</button>
-        </div>
-        <ul>
-          {this.props.scores.map((score, i) => {
-            return <li>{score.name} - {score.value}</li>
-          })}
-        </ul>
+      <div className="scores">
+          {this.props.scores.map((score, i) =>
+            <div className="score" key={i}>{score.user!.name} - {score.durationMilliseconds}</div>
+          )}
       </div>
     );
   }
@@ -25,7 +26,7 @@ class Scores extends React.Component<Props, {}> {
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
-    addScore
+    getScoresThunkAsync
   }, dispatch)
 }
 const mapStateToProps = (state: ReduxState) => {

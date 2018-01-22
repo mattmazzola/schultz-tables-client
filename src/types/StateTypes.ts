@@ -1,7 +1,6 @@
-import { Score } from './ActionObjects'
 import * as models from './models'
 
-export type ScoresState = Score[]
+export type ScoresState = models.IScore[]
 
 export type UsersState = models.IUser[]
 

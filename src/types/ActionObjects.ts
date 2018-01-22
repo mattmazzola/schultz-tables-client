@@ -1,14 +1,9 @@
 import AT from './ActionTypes'
 import * as models from './models'
 
-export interface Score {
-    name: string
-    value: number
-}
-
 export interface AddScoreAction {
     type: AT.ADD_SCORE
-    score: Score
+    score: models.IScore
 }
 
 export interface UserLoginAction {
@@ -35,10 +30,28 @@ export interface GetUsersRejectedAction {
     reason: string
 }
 
+
+export interface GetScoresAsyncAction {
+    type: AT.GET_SCORES_ASYNC
+}
+
+export interface GetScoresFulfilledAction {
+    type: AT.GET_SCORES_FULFILLED
+    scores: models.IScore[]
+}
+
+export interface GetScoresRejectedAction {
+    type: AT.GET_SCORES_REJECTED
+    reason: string
+}
+
 export type ActionObject =
     AddScoreAction |
     UserLoginAction |
     UserLogoutAction |
     GetUsersAsyncAction |
     GetUsersFulfilledAction |
-    GetUsersRejectedAction
+    GetUsersRejectedAction |
+    GetScoresAsyncAction |
+    GetScoresFulfilledAction |
+    GetScoresRejectedAction

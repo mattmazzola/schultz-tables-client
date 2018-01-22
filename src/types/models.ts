@@ -53,3 +53,17 @@ export interface IUser {
     name: string
     id: string
 }
+
+
+export interface IScoresResponse {
+    scores: IScore[]
+    users: IUser[]
+}
+
+export interface IScore {
+    durationMilliseconds: number,
+    id: string
+    scoreDetailsId: string
+    userId: string
+    user: IUser | undefined
+}

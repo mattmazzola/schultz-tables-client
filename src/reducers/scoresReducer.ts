@@ -7,6 +7,8 @@ const initialState: ScoresState = []
 
 const reducer: Reducer<ScoresState> = (state = initialState, action: ActionObject): ScoresState => {
     switch (action.type) {
+        case AT.GET_SCORES_FULFILLED:
+            return [...action.scores]
         case AT.ADD_SCORE:
             return [...state, action.score]
         default:
