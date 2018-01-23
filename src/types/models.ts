@@ -45,13 +45,16 @@ export interface IGameState {
 }
 
 export interface ITable {
+    width: number
+    height: number
     expectedSequence: string[]
     cells: ICell[]
 }
 
-export interface IOption {
-    id: string
-    name: string
+export interface IOption<T> {
+    id: string,
+    name: string,
+    value: T
 }
 
 export interface IUser {

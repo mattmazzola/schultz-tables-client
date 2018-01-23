@@ -48,7 +48,7 @@ export const generateSymbols = (tableConfig: models.ITableConfig): models.ISeque
     }
 }
 
-export const generateTable = (tableConfig: models.ITableConfig, sequence: models.ISequence) => {
+export const generateTable = (tableConfig: models.ITableConfig, sequence: models.ISequence): models.ITable => {
     const cells = sequence.randomizedSequence.map((symbol, i) => {
         const x = i % tableConfig.width + 1
         const y = Math.floor(i / tableConfig.width) + 1
@@ -62,6 +62,8 @@ export const generateTable = (tableConfig: models.ITableConfig, sequence: models
     })
 
     return {
+        width: tableConfig.width,
+        height: tableConfig.height,
         expectedSequence: sequence.expectedSequence,
         cells
     }

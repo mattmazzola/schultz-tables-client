@@ -14,8 +14,10 @@ import GamePreview from '../components/GamePreview'
 interface State {
   isGameVisible: boolean
   isGameOptionsVisible: boolean
-  gameTypes: string[]
-  gameTypeSelected: string
+  gameTypes: models.IOption<models.ITableConfig>[]
+  gameTypeIdSelected: string
+  oldGameTypes: string[]
+  oldGameTypeSelected: string
   width: number
   height: number
   signedStartTime: string | null
@@ -42,13 +44,15 @@ const table = utilities.generateTable(tableConfig, sequence)
 const initialState: State = {
   isGameVisible: false,
   isGameOptionsVisible: false,
-  gameTypes: [
+  gameTypes: options.presetTables,
+  gameTypeIdSelected: options.presetTables[0].id,
+  oldGameTypes: [
     'Standard',
     'Medium',
     'Hard',
     'Custom'
   ],
-  gameTypeSelected: 'Standard',
+  oldGameTypeSelected: 'Standard',
   width: 5,
   height: 5,
   signedStartTime: null,
@@ -108,11 +112,18 @@ export class Home extends React.Component<Props, State> {
   }
 
   onChangeGameType = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const gameTypeSelected = event.target.value
-    const isCustomSelected = gameTypeSelected === 'Custom'
+    const gameTypeIdSelected = event.target.value
+    const isCustomSelected = gameTypeIdSelected === 'Custom'
+
+    const gameTypeSelected = this.state.gameTypes.find(t => t.id === gameTypeIdSelected)!
+    const tableConfigSelected = gameTypeSelected.value
+    const sequence = utilities.generateSymbols(tableConfigSelected)
+    const table = utilities.generateTable(tableConfigSelected, sequence)
+
     this.setState({
       isGameOptionsVisible: isCustomSelected,
-      gameTypeSelected
+      gameTypeIdSelected,
+      table
     })
   }
 
@@ -203,11 +214,11 @@ export class Home extends React.Component<Props, State> {
           <select
             id="gameTypeSelection"
             className="game-type-selection"
-            value={this.state.gameTypeSelected}
+            value={this.state.gameTypeIdSelected}
             onChange={this.onChangeGameType}
           >
-            {this.state.gameTypes.map((gameType, i) =>
-              <option key={i} value={gameType}>{gameType}</option>
+            {this.state.gameTypes.map(gameType =>
+              <option key={gameType.id} value={gameType.id}>{gameType.name}</option>
             )}
           </select>
         </div>
@@ -246,10 +257,10 @@ export class Home extends React.Component<Props, State> {
               <div>Symbols:</div>
               <select
                 className="game-options-select"
-                value={this.state.gameTypeSelected}
+                value={this.state.oldGameTypeSelected}
                 onChange={this.onChangeGameType}
               >
-                {this.state.gameTypes.map((gameType, i) =>
+                {this.state.oldGameTypes.map((gameType, i) =>
                   <option key={i} value={gameType}>{gameType}</option>
                 )}
               </select>
@@ -268,10 +279,10 @@ export class Home extends React.Component<Props, State> {
               <div>Font-Color:</div>
               <select
                 className="game-options-select"
-                value={this.state.gameTypeSelected}
+                value={this.state.oldGameTypeSelected}
                 onChange={this.onChangeGameType}
               >
-                {this.state.gameTypes.map((gameType, i) =>
+                {this.state.oldGameTypes.map((gameType, i) =>
                   <option key={i} value={gameType}>{gameType}</option>
                 )}
               </select>
@@ -279,10 +290,10 @@ export class Home extends React.Component<Props, State> {
               <div>Cell-Color:</div>
               <select
                 className="game-options-select"
-                value={this.state.gameTypeSelected}
+                value={this.state.oldGameTypeSelected}
                 onChange={this.onChangeGameType}
               >
-                {this.state.gameTypes.map((gameType, i) =>
+                {this.state.oldGameTypes.map((gameType, i) =>
                   <option key={i} value={gameType}>{gameType}</option>
                 )}
               </select>
@@ -290,10 +301,10 @@ export class Home extends React.Component<Props, State> {
               <div>Text-Effect:</div>
               <select
                 className="game-options-select"
-                value={this.state.gameTypeSelected}
+                value={this.state.oldGameTypeSelected}
                 onChange={this.onChangeGameType}
               >
-                {this.state.gameTypes.map((gameType, i) =>
+                {this.state.oldGameTypes.map((gameType, i) =>
                   <option key={i} value={gameType}>{gameType}</option>
                 )}
               </select>
@@ -301,10 +312,10 @@ export class Home extends React.Component<Props, State> {
               <div>Animation:</div>
               <select
                 className="game-options-select"
-                value={this.state.gameTypeSelected}
+                value={this.state.oldGameTypeSelected}
                 onChange={this.onChangeGameType}
               >
-                {this.state.gameTypes.map((gameType, i) =>
+                {this.state.oldGameTypes.map((gameType, i) =>
                   <option key={i} value={gameType}>{gameType}</option>
                 )}
               </select>
@@ -319,6 +330,8 @@ export class Home extends React.Component<Props, State> {
         {this.state.isGameVisible
           && <div className="game-container">
             <Game
+              width={this.state.table.width}
+              height={this.state.table.height}
               table={this.state.table}
               gameState={this.state.gameState}
               onClickClose={this.onClickCloseGame}

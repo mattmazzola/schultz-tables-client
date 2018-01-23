@@ -12,6 +12,8 @@ interface Position {
 }
 
 interface Props {
+    width: number
+    height: number
     table: models.ITable
     gameState: models.IGameState
     onClickClose: () => void
@@ -106,6 +108,11 @@ export default class Game extends React.Component<Props, State> {
     }
 
     render() {
+        const tableStyle: any = {
+            ...this.state.position,
+            gridTemplate: `repeat(${this.props.width}, 1fr)/repeat(${this.props.height}, 1fr)`
+        }
+
         return (
             <div className="game">
                 <header className="game__header">
@@ -115,7 +122,7 @@ export default class Game extends React.Component<Props, State> {
                     <button className={`button-close ${this.props.gameState.isCompleted ? 'button-close--completed' : ''}`} type="button" onClick={() => this.props.onClickClose()}><i className="icon-close material-icons">clear</i></button>
                 </header>
                 <div className="game__table" ref={this.onRef}>
-                    <div className="table" style={this.state.position}>
+                    <div className="table" style={tableStyle}>
                         {this.props.table.cells.map((cell, i) =>
                             <div key={i} className="table__cell" onClick={() => this.props.onClickCell(cell)}>
                                 {cell.text}
