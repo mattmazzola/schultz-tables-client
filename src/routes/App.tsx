@@ -68,10 +68,10 @@ class App extends React.Component<Props, {}> {
                   <div className="icon"><i className="material-icons">group</i></div>
                   <div className="label">User</div>
                 </NavLink>
-                {this.props.user.isLoggedIn && <NavLink className="link" to="/profile" exact={true}>
+                <NavLink className="link" to="/profile" exact={true}>
                   <div className="icon"><i className="material-icons">account_circle</i></div>
                   <div className="label">Profile</div>
-                </NavLink>}
+                </NavLink>
               </nav>
             </div>
           </header>

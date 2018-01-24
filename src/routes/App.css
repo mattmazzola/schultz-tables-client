@@ -85,7 +85,7 @@ nav > a:active {
 }
 
 nav > a:hover:not(.active) {
-    background-color: rgba(0,0,0,0.05)
+    background-color: rgba(21, 133, 189, 0.8)
 }
 
 main {
