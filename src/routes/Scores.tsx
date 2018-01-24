@@ -6,17 +6,40 @@ import { getScoresThunkAsync } from '../actions/scoresActions'
 import { ReduxState } from '../types'
 import './Scores.css'
 
-class Scores extends React.Component<Props, {}> {
+interface State {
+  isLoading: boolean
+}
+
+const initialState: State = {
+  isLoading: false
+}
+
+class Scores extends React.Component<Props, State> {
+  state = initialState
+
   componentWillMount() {
     if (this.props.scores.length === 0) {
+      this.setState({
+        isLoading: true
+      })
       this.props.getScoresThunkAsync()
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (this.state.isLoading === true && nextProps.scores.length > 0) {
+      this.setState({
+        isLoading: false
+      })
     }
   }
 
   render() {
     return (
       <div className="scores">
-          {this.props.scores.map((score, i) =>
+        {this.state.isLoading
+          ? <div className="score">Loading...</div>
+          : this.props.scores.map((score, i) =>
             <div className="score" key={i}>{score.user ? score.user.name : 'Unknown'} - {score.durationMilliseconds}</div>
           )}
       </div>
@@ -34,7 +57,6 @@ const mapStateToProps = (state: ReduxState) => {
     scores: state.scores
   }
 }
-
 
 // Props types inferred from mapStateToProps & dispatchToProps
 const stateProps = returntypeof(mapStateToProps);

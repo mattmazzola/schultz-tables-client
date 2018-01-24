@@ -6,19 +6,42 @@ import { ReduxState } from '../types'
 import { getUsersThunkAsync } from '../actions'
 import './Users.css'
 
-export class Users extends React.Component<Props, {}> {
+interface State {
+  isLoading: boolean
+}
+
+const initialState: State = {
+  isLoading: false
+}
+
+class Users extends React.Component<Props, State> {
+  state = initialState
+
   componentWillMount() {
     if (this.props.users.length === 0) {
+      this.setState({
+        isLoading: true
+      })
       this.props.getUsersThunkAsync()
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (this.state.isLoading === true && nextProps.users.length > 0) {
+      this.setState({
+        isLoading: false
+      })
     }
   }
 
   render() {
     return (
       <div className="users">
-        {this.props.users.map((user, i) =>
-          <div className="user" key={user.id}><i className="icon-person material-icons">person</i> {i} {user.name}: {user.email}</div>
-        )}
+        {this.state.isLoading
+          ? <div className="user">Loading...</div>
+          : this.props.users.map((user, i) =>
+            <div className="user" key={user.id}><i className="icon-person material-icons">person</i> {i} {user.name}: {user.email}</div>
+          )}
       </div>
     );
   }
