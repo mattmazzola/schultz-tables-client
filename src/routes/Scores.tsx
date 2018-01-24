@@ -39,8 +39,11 @@ class Scores extends React.Component<Props, State> {
       <div className="scores">
         {this.state.isLoading
           ? <div className="score">Loading...</div>
-          : this.props.scores.map((score, i) =>
-            <div className="score" key={i}>{score.user ? score.user.name : 'Unknown'} - {score.durationMilliseconds}</div>
+          : this.props.scores.map(score =>
+            <div className="score" key={score.id}>
+              <span>{score.user ? score.user.name : 'Unknown'}</span>
+              <span>{score.durationMilliseconds}</span>
+            </div>
           )}
       </div>
     );

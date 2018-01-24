@@ -5,7 +5,12 @@
 }
 
 .score {
+  white-space: nowrap;
   padding: 1em;
+  display: grid;
+  grid-template-columns: min-content min-content 1fr;
+  grid-gap: 1em;
+  cursor: pointer;
 }
 
 .score:not(:last-of-type) {
