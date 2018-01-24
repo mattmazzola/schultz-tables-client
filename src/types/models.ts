@@ -63,7 +63,6 @@ export interface IUser {
     id: string
 }
 
-
 export interface IScoresResponse {
     scores: IScore[]
     users: IUser[]
@@ -75,6 +74,35 @@ export interface IScore {
     scoreDetailsId: string
     userId: string
     user: IUser | undefined
+}
+
+export interface IScoreDetails {
+    id: string
+    startTime: Date
+    endTime: Date
+    sequence: IUserSelection[]
+    tableLayout: ITableLayout
+    tableType: ITableType
+}
+
+export interface ITableLayout {
+    id: string
+    height: number
+    width: number
+    expectedSequence: string[]
+    randomizedSequence: string[]
+}
+
+export interface ITableType {
+    id: string
+    width: number
+    height: number
+    properties: KVPair<string, string>[]
+}
+
+export interface KVPair<K,V> {
+    key: K
+    value: V
 }
 
 export interface IScoreRequest {
@@ -104,4 +132,9 @@ export interface IScoreResponse {
 
 export interface IStartScoreResponse {
     value: string
+}
+
+export interface IDisplayScore {
+    preview: IScore
+    details: IScoreDetails
 }

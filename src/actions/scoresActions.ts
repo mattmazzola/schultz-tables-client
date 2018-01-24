@@ -155,3 +155,50 @@ export const getScoresThunkAsync = (): ThunkAction<any, any, any> => {
             })
     }
 }
+
+export const getScoreDetailsAsync = (): ActionObject =>
+    ({
+        type: AT.GET_SCORE_DETAILS_ASYNC
+    })
+
+export const getScoreDetailsFulfilled = (scoreDetails: models.IScoreDetails): ActionObject =>
+    ({
+        type: AT.GET_SCORE_DETAILS_FULFILLED,
+        scoreDetails
+    })
+
+export const getScoreDetailsRejected = (reason: string): ActionObject =>
+    ({
+        type: AT.GET_SCORE_DETAILS_REJECTED,
+        reason
+    })
+
+export const getScoreDetailsThunkAsync = (scoreDetailsId: string): ThunkAction<Promise<models.IScoreDetails | void>, any, any> => {
+    return (dispatch) => {
+        return fetch(`https://schultztables.azurewebsites.net/api/scores/${scoreDetailsId}/details`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+            }
+        })
+            .then(response => {
+                const json = response.json()
+                if (response.ok) {
+                    return json
+                }
+                else {
+                    throw new Error(JSON.stringify(json))
+                }
+            })
+            .then((scoreDetails: models.IScoreDetails) => {
+                dispatch(getScoreDetailsFulfilled(scoreDetails))
+                return scoreDetails
+            })
+            .catch(error => {
+                console.error(error)
+                dispatch(getScoreDetailsRejected(error))
+                return error
+            })
+    }
+}

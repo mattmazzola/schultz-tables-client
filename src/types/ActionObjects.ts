@@ -69,6 +69,20 @@ export interface GetScoresRejectedAction {
     reason: string
 }
 
+export interface GetScoreDetailsAsyncAction {
+    type: AT.GET_SCORE_DETAILS_ASYNC
+}
+
+export interface GetScoreDetailsFulfilledAction {
+    type: AT.GET_SCORE_DETAILS_FULFILLED
+    scoreDetails: models.IScoreDetails
+}
+
+export interface GetScoreDetailsRejectedAction {
+    type: AT.GET_SCORE_DETAILS_REJECTED
+    reason: string
+}
+
 export type ActionObject =
     StartScoreAsync |
     StartScoreFulfilled |
@@ -83,4 +97,7 @@ export type ActionObject =
     GetUsersRejectedAction |
     GetScoresAsyncAction |
     GetScoresFulfilledAction |
-    GetScoresRejectedAction
+    GetScoresRejectedAction |
+    GetScoreDetailsAsyncAction |
+    GetScoreDetailsFulfilledAction |
+    GetScoreDetailsRejectedAction
