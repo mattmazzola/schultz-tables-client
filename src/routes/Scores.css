@@ -3,16 +3,3 @@
   background: white;
   border-radius: 3px;
 }
-
-.score {
-  white-space: nowrap;
-  padding: 1em;
-  display: grid;
-  grid-template-columns: min-content min-content 1fr;
-  grid-gap: 1em;
-  cursor: pointer;
-}
-
-.score:not(:last-of-type) {
-  border-bottom: 1px solid rgba(51,51,51, 0.25);
-}

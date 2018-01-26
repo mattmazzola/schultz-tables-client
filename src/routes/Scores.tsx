@@ -2,9 +2,9 @@ import * as React from 'react'
 import { returntypeof } from 'react-redux-typescript';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getScoresThunkAsync, getScoreDetailsThunkAsync } from '../actions/scoresActions'
+import { getScoresThunkAsync } from '../actions/scoresActions'
 import { ReduxState } from '../types'
-import * as models from '../types/models'
+import Score from '../components/Score'
 import './Scores.css'
 
 interface State {
@@ -35,25 +35,12 @@ class Scores extends React.Component<Props, State> {
     }
   }
 
-  async onClickScore(score: models.IScore) {
-    console.log(`onClickScore: `, score)
-    const getScoreDetails: (id: string) => Promise<models.IScoreDetails> = this.props.getScoreDetailsThunkAsync as any
-    const scoreDetails = await getScoreDetails(score.scoreDetailsId)
-
-    console.log(`scoreDetails: `, scoreDetails)
-  }
-
   render() {
     return (
       <div className="scores">
         {this.state.isLoading
-          ? <div className="score">Loading...</div>
-          : this.props.scores.map(score =>
-            <div className="score" key={score.id} onClick={() => this.onClickScore(score)}>
-              <span>{score.user ? score.user.name : 'Unknown'}</span>
-              <span>{score.durationMilliseconds}</span>
-            </div>
-          )}
+          ? <div className="score-loading">Loading...</div>
+          : this.props.scores.map(score => <Score key={score.id} score={score} />)}
       </div>
     );
   }
@@ -61,8 +48,7 @@ class Scores extends React.Component<Props, State> {
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
-    getScoresThunkAsync,
-    getScoreDetailsThunkAsync
+    getScoresThunkAsync
   }, dispatch)
 }
 const mapStateToProps = (state: ReduxState) => {
