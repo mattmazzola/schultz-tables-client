@@ -1,0 +1,13 @@
+.user-properties {
+    display: grid;
+    grid-template: auto / min-content 1fr;
+    grid-gap: 0.5em 1em;
+    margin: 0;
+}
+
+.user-properties dt {
+    font-weight: bold;
+}
+.user-properties dd {
+    margin: 0;
+}

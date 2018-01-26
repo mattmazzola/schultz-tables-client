@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {
   BrowserRouter as Router,
+  Switch,
   Route,
   NavLink
 } from 'react-router-dom'
@@ -15,7 +16,9 @@ import Home from './Home'
 import Login from './Login'
 import Scores from './Scores'
 import Users from './Users'
+import User from './User'
 import Profile from './Profile'
+import NoMatch from './NoMatch'
 
 const userIsAuthenticated = connectedRouterRedirect<any, ReduxState>({
   // The url to redirect user to if they fail
@@ -76,11 +79,15 @@ class App extends React.Component<Props, {}> {
             </div>
           </header>
           <main>
-            <Route path="/" exact={true} component={ProtectedHome} />
-            <Route path="/login" exact={true} component={RedirectedLogin} />
-            <Route path="/scores" exact={true} component={ProtectedScores} />
-            <Route path="/users" exact={true} component={ProtectedUsers} />
-            <Route path="/profile" exact={true} component={ProtectedProfile} />
+            <Switch>
+              <Route path="/" exact={true} component={ProtectedHome} />
+              <Route path="/login" exact={true} component={RedirectedLogin} />
+              <Route path="/scores" exact={true} component={ProtectedScores} />
+              <Route path="/users" exact={true} component={ProtectedUsers} />
+              <Route path="/profile" exact={true} component={ProtectedProfile} />
+              <Route path="/users/:userId" component={User} />
+              <Route component={NoMatch} />
+            </Switch>
           </main>
         </div>
       </Router>

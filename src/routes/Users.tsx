@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { ReduxState } from '../types'
 import { getUsersThunkAsync } from '../actions'
+import { NavLink } from 'react-router-dom'
 import './Users.css'
 
 interface State {
@@ -44,6 +45,7 @@ class Users extends React.Component<Props, State> {
               <span><i className="icon-person material-icons">person</i></span>
               <span>{user.name}</span>
               <span>{user.email}</span>
+              <span><NavLink to={{ pathname: `/users/${user.id}`, state: { user } }} exact={true}>Profile</NavLink></span>
             </div>
           )}
       </div>
