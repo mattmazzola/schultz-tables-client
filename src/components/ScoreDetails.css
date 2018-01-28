@@ -20,7 +20,7 @@
 
 .score-details .sequence {
     display: grid;
-    grid-template-columns: repeat(3, min-content);
+    grid-template-columns: repeat(4, min-content);
     grid-gap: 0.25em 1em;
     text-align: center;
 }

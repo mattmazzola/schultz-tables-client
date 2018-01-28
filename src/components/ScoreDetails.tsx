@@ -6,9 +6,11 @@ import { ReduxState } from '../types'
 import * as models from '../types/models'
 import * as moment from 'moment'
 import { getTimeDifference } from '../services/utilities'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import './ScoreDetails.css'
 
 interface ReceivedProps {
+    durationMilliseconds: number
     scoreDetails: models.IScoreDetails
 }
 
@@ -24,6 +26,14 @@ class ScoreDetails extends React.Component<Props, State> {
     render() {
         const { scoreDetails } = this.props
         const { tableLayout, tableType } = scoreDetails
+        const data = scoreDetails.sequence
+            .filter(s => s.correct)
+            .map<any>(s => (
+                { name: s.cell.text, time: getTimeDifference(s.time as any, scoreDetails.startTime as any) }
+            ))
+        const maxYAxis = Math.ceil(this.props.durationMilliseconds/1000)
+        const horizontalPoints = Array(maxYAxis).fill(0).map((_, i) => i + 1)
+
         return (
             <div>
                 <dl>
@@ -56,22 +66,41 @@ class ScoreDetails extends React.Component<Props, State> {
                             <div>
                                 <i className="material-icons">access_time</i>
                             </div>
+                            <div>
+                                <i className="material-icons">access_time</i>
+                            </div>
 
-                            {scoreDetails.sequence.map(seq => {
-                                const duration = getTimeDifference(seq.time as any, scoreDetails.startTime as any)
+                            {scoreDetails.sequence.map((o,i,seq) => {
+                                const totalDuration = getTimeDifference(o.time as any, scoreDetails.startTime as any)
+                                const duration = i === 0
+                                    ? getTimeDifference(o.time as any, scoreDetails.startTime as any)
+                                    : getTimeDifference(o.time as any, seq[i-1].time as any)
+
+
                                 return (
-                                    <React.Fragment key={seq.time as any}>
+                                    <React.Fragment key={o.time as any}>
                                         <div>
-                                            {seq.correct
+                                            {o.correct
                                                 ? <i className="material-icons correct">done</i>
                                                 : <i className="material-icons incorrect">error_outline</i>}
                                         </div>
-                                        <div>{seq.cell.text}</div>
+                                        <div>{o.cell.text}</div>
                                         <div>+{duration}</div>
+                                        <div>+{totalDuration}</div>
                                     </React.Fragment>
                                 )
                             })}
                         </div>
+                    </dd>
+                    <dt>Timeline:</dt>
+                    <dd>
+                        <LineChart width={420} height={400} data={data}>
+                            <Line type="monotone" dataKey="time" stroke="#8884d8" />
+                            <XAxis dataKey="name" domain={[0, 'dataMax']} />
+                            <YAxis dataKey="time" domain={[0, maxYAxis]} ticks={horizontalPoints}  />
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <Tooltip />
+                        </LineChart>
                     </dd>
                 </dl>
             </div>

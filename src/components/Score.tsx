@@ -67,7 +67,7 @@ class Score extends React.Component<Props, State> {
                     && <div className="score-details">
                         {this.state.isDetailsLoading
                             ? <div>Loading....</div>
-                            : <div>{this.state.scoreDetails && <ScoreDetails scoreDetails={this.state.scoreDetails} />}</div>
+                            : <div>{this.state.scoreDetails && <ScoreDetails durationMilliseconds={score.durationMilliseconds} scoreDetails={this.state.scoreDetails} />}</div>
                         }</div>}
             </div>
         )
