@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { ReduxState } from '../types'
 import * as models from '../types/models'
+import * as moment from 'moment'
+import { getTimeDifference } from '../services/utilities'
 import './ScoreDetails.css'
 
 interface ReceivedProps {
@@ -25,24 +27,24 @@ class ScoreDetails extends React.Component<Props, State> {
         return (
             <div>
                 <dl>
-                    <dt>Size:</dt>
+                    <dt><i className="material-icons">border_all</i> Size:</dt>
                     <dd>{tableLayout.width}w &times; {tableLayout.height}h</dd>
-                    <dt>Properties:</dt>
+                    <dt><i className="material-icons">format_list_bulleted</i> Properties:</dt>
                     <dd>
                         <dl>
                             {tableType.properties.map(({ key, value }) =>
-                                <React.Fragment>
+                                <React.Fragment key={key}>
                                     <dt>{key}:</dt>
                                     <dd>{value}</dd>
                                 </React.Fragment>
                             )}
                         </dl>
                     </dd>
-                    <dt>Start Time:</dt>
-                    <dd>{scoreDetails.startTime}</dd>
-                    <dt>End Time:</dt>
-                    <dd>{scoreDetails.endTime}</dd>
-                    <dt>Sequence</dt>
+                    <dt><i className="material-icons">access_time</i> Start Time:</dt>
+                    <dd>{moment(scoreDetails.startTime).format('MMMM D, h:mm:ss a')}</dd>
+                    <dt><i className="material-icons">access_time</i> End Time:</dt>
+                    <dd>{moment(scoreDetails.endTime).format('MMMM D, h:mm:ss a')}</dd>
+                    <dt><i className="material-icons">format_list_numbered</i> Sequence</dt>
                     <dd>
                         <div className="sequence">
                             <div>
@@ -55,17 +57,20 @@ class ScoreDetails extends React.Component<Props, State> {
                                 <i className="material-icons">access_time</i>
                             </div>
 
-                            {scoreDetails.sequence.map(seq => 
-                                <React.Fragment>
-                                    <div>
-                                        {seq.correct
-                                            ? <i className="material-icons correct">done</i>
-                                            : <i className="material-icons incorrect">error_outline</i>}
-                                    </div>
-                                    <div>{seq.cell.text}</div>
-                                    <div>+{seq.time} - {scoreDetails.startTime}</div>
-                                </React.Fragment>
-                            )}
+                            {scoreDetails.sequence.map(seq => {
+                                const duration = getTimeDifference(seq.time as any, scoreDetails.startTime as any)
+                                return (
+                                    <React.Fragment key={seq.time as any}>
+                                        <div>
+                                            {seq.correct
+                                                ? <i className="material-icons correct">done</i>
+                                                : <i className="material-icons incorrect">error_outline</i>}
+                                        </div>
+                                        <div>{seq.cell.text}</div>
+                                        <div>+{duration}</div>
+                                    </React.Fragment>
+                                )
+                            })}
                         </div>
                     </dd>
                 </dl>

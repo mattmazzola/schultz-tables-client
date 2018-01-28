@@ -1,4 +1,5 @@
 import * as models from '../types/models'
+import * as moment from 'moment'
 
 export function guid(): string {
     var d = new Date().getTime()
@@ -80,3 +81,6 @@ export const generateDefaultGameState = () =>
         expectedSymbolIndex: 0,
         userSequence: []
     })
+
+export const getTimeDifference = (timeA: string, timeB: string) =>
+    moment.duration(moment(timeA).diff(moment(timeB))).asSeconds()

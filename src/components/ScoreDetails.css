@@ -1,9 +1,14 @@
+.score-details {
+    padding: 1em;
+    background: rgba(0,0,0,0.05);
+    border-top: 1px solid rgba(51,51,51, 0.25)
+}
 
 .score-details dl {
     margin: 0;
     display: grid;
     grid-template-columns: min-content 1fr;
-    grid-gap: 0.25em 1em;
+    grid-gap: 1em 2em;
     white-space: nowrap;
 }
 .score-details dt {
@@ -20,12 +25,15 @@
     text-align: center;
 }
 
-.material-icons.correct {
+.score-details .material-icons {
     vertical-align: sub;
+    line-height: 0
+}
+
+.material-icons.correct {
     color: green;
 }
 
 .material-icons.incorrect {
-    vertical-align: sub;
     color: red;
 }

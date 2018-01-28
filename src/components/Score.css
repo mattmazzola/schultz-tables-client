@@ -11,12 +11,12 @@
     cursor: pointer;
 }
 .score-preview__icon {
-    line-height: 0
+    line-height: 0;
 }
-.score-details {
-    padding: 1em;
-    background: rgba(0,0,0,0.05);
-    border-top: 1px solid rgba(51,51,51, 0.25)
+.score-preview__time {
+    min-width: 6ch;
+    text-align: right;
+    font-weight: bold;
 }
 
 .score:not(:last-of-type) {

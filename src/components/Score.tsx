@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getScoreDetailsThunkAsync } from '../actions/scoresActions'
 import { ReduxState } from '../types'
 import * as models from '../types/models'
+import * as moment from 'moment'
 import ScoreDetails from './ScoreDetails'
 import './Score.css'
 
@@ -54,12 +55,12 @@ class Score extends React.Component<Props, State> {
         return (
             <div className="score">
                 <div className="score-preview" onClick={() => this.onClickScore(score)}>
-                    <span>{score.durationMilliseconds}</span>
+                    <span className="score-preview__time">{moment.duration(score.durationMilliseconds).asSeconds()}</span>
                     <span>{score.user ? score.user.name : 'Unknown'}</span>
                     <span className="score-preview__icon">
                         {this.state.isDetailsVisible
-                            ? <i className="material-icons">expand_less</i>
-                            : <i className="material-icons">expand_more</i>}
+                            ? <i className="material-icons">keyboard_arrow_up</i>
+                            : <i className="material-icons">keyboard_arrow_down</i>}
                     </span>
                 </div>
                 {this.state.isDetailsVisible
