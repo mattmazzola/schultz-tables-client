@@ -161,6 +161,11 @@ export class Home extends React.Component<Props, State> {
       const correct = cell.text === expectedSymbol
       let expectedSymbolIndex = prevGameState.expectedSymbolIndex
       let duration = prevGameState.duration
+      const userSequence = [...prevGameState.userSequence, {
+        correct,
+        time: new Date(),
+        cell
+      }]
 
       if (correct) {
         if (expectedSymbolIndex === prevState.table.expectedSequence.length - 1) {
@@ -179,7 +184,7 @@ export class Home extends React.Component<Props, State> {
             tableHeight: prevState.height,
             tableProperties: [],
             tableWidth: prevState.width,
-            userSequence: prevGameState.userSequence
+            userSequence
           }
 
           this.props.addScoreThunkAsync(scoreRequest)
@@ -193,11 +198,7 @@ export class Home extends React.Component<Props, State> {
           duration,
           expectedSymbolIndex,
           isCompleted,
-          userSequence: [...prevGameState.userSequence, {
-            correct,
-            time: new Date(),
-            cell
-          }],
+          userSequence: userSequence,
         }
       }
     })
