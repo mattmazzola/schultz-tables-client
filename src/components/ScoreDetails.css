@@ -1,0 +1,31 @@
+
+.score-details dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    grid-gap: 0.25em 1em;
+    white-space: nowrap;
+}
+.score-details dt {
+    font-weight: bold;
+}
+.score-details dd {
+    margin: 0
+}
+
+.score-details .sequence {
+    display: grid;
+    grid-template-columns: repeat(3, min-content);
+    grid-gap: 0.25em 1em;
+    text-align: center;
+}
+
+.material-icons.correct {
+    vertical-align: sub;
+    color: green;
+}
+
+.material-icons.incorrect {
+    vertical-align: sub;
+    color: red;
+}

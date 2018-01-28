@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getScoreDetailsThunkAsync } from '../actions/scoresActions'
 import { ReduxState } from '../types'
 import * as models from '../types/models'
+import ScoreDetails from './ScoreDetails'
 import './Score.css'
 
 interface ReceivedProps {
@@ -59,14 +60,14 @@ class Score extends React.Component<Props, State> {
                         {this.state.isDetailsVisible
                             ? <i className="material-icons">expand_less</i>
                             : <i className="material-icons">expand_more</i>}
-                        </span>
+                    </span>
                 </div>
                 {this.state.isDetailsVisible
                     && <div className="score-details">
                         {this.state.isDetailsLoading
                             ? <div>Loading....</div>
-                            : <div>Score Details</div>}
-                    </div>}
+                            : <div>{this.state.scoreDetails && <ScoreDetails scoreDetails={this.state.scoreDetails} />}</div>
+                        }</div>}
             </div>
         )
     }
