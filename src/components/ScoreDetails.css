@@ -37,3 +37,7 @@
 .material-icons.incorrect {
     color: red;
 }
+
+.score-details__line-chart {
+    margin-left: -40px;
+}
