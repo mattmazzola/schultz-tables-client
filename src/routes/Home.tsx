@@ -187,7 +187,8 @@ export class Home extends React.Component<Props, State> {
             userSequence
           }
 
-          this.props.addScoreThunkAsync(scoreRequest)
+          const { id, name } = this.props.user
+          this.props.addScoreThunkAsync(scoreRequest, { id, name })
         }
         expectedSymbolIndex += 1
       }
@@ -352,6 +353,7 @@ const mapDispatchToProps = (dispatch: any) => {
 }
 const mapStateToProps = (state: ReduxState) => {
   return {
+    user: state.user
   }
 }
 

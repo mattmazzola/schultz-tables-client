@@ -69,7 +69,7 @@ export const addScoreRejected = (reason: string): ActionObject =>
         reason
     })
 
-export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest): ThunkAction<any, any, any> => {
+export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: models.IUser): ThunkAction<any, any, any> => {
     return (dispatch) => {
         return fetch('https://schultztables.azurewebsites.net/api/scores', {
             method: 'POST',
@@ -95,7 +95,7 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest): ThunkAct
                     id: scoreResponse.id,
                     scoreDetailsId: scoreResponse.id,
                     userId: scoreResponse.userId,
-                    user: undefined
+                    user
                 }
                 dispatch(addScoreFulfilled(score))
             })

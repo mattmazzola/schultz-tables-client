@@ -4,10 +4,8 @@ export type ScoresState = models.IScore[]
 
 export type UsersState = models.IUser[]
 
-export interface UserState {
+export interface UserState extends models.IUser{
     isLoggedIn: boolean
-    id: string
-    name: string
 }
 
 export interface ReduxState {

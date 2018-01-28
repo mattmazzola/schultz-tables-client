@@ -31,7 +31,6 @@ export default class User extends React.Component<Props, State> {
         return <div>
             <dl className="user-properties">
                 <dt>Name:</dt><dd>{user.name}</dd>
-                <dt>Email:</dt><dd>{user.email}</dd>
             </dl>
         </div>
     }

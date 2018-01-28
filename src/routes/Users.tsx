@@ -44,7 +44,6 @@ class Users extends React.Component<Props, State> {
             <div className="user" key={user.id}>
               <span><i className="icon-person material-icons">person</i></span>
               <span>{user.name}</span>
-              <span>{user.email}</span>
               <span><NavLink to={{ pathname: `/users/${user.id}`, state: { user } }} exact={true}>Profile</NavLink></span>
             </div>
           )}

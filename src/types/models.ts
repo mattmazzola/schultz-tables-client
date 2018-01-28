@@ -58,7 +58,6 @@ export interface IOption<T> {
 }
 
 export interface IUser {
-    email: string
     name: string
     id: string
 }
