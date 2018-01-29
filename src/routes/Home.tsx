@@ -90,13 +90,23 @@ export class Home extends React.Component<Props, State> {
     console.log(`onClickStart`)
     const startScoreThunkAsync: () => Promise<string> = this.props.startScoreThunkAsync as any
     
+    const gameTypeSelected = this.state.gameTypes.find(t => t.id === this.state.gameTypeIdSelected)
+    if (!gameTypeSelected) {
+      throw new Error(`Could not find game type: ${this.state.gameTypeIdSelected} in available game types: ${this.state.gameTypes}`)
+    }
+
+    const tableConfigSelected = gameTypeSelected.value
+    const sequence = utilities.generateSymbols(tableConfigSelected)
+    const table = utilities.generateTable(tableConfigSelected, sequence)
+
     startScoreThunkAsync()
       .then(signedStartTime => {
         this.setState({
+          table,
           signedStartTime,
           isGameVisible: true,
           gameState: {
-            ...this.state.gameState,
+            ...utilities.generateDefaultGameState(),
             startTime: new Date(),
             isStarted: true
           }
