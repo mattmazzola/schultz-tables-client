@@ -56,7 +56,7 @@ class App extends React.Component<Props, {}> {
           <header className="app-header">
             <div>
               <div className="banner">
-                <h2>Schultz Tables</h2>
+                <NavLink to="/"><h2>Schultz Tables</h2></NavLink>
               </div>
               <nav>
                 <NavLink className="link" to="/" exact={true}>
