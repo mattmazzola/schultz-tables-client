@@ -1,5 +1,5 @@
 :root {
-  --main-column-min-width: 500px
+  --main-column-min-width: 100px
 }
 
 body {
@@ -19,7 +19,7 @@ body {
   
   color: white;
   display: grid;
-  grid-template-columns: 1fr 600px 1fr;
+  grid-template-columns: 1fr min-content 1fr;
 }
 .app-header > * {
   grid-column: 2
@@ -34,7 +34,7 @@ body {
 .app-content {
   padding: 2em 0;
   display: grid;
-  grid-template-columns: 1fr 600px 1fr;
+  grid-template-columns: 1fr min-content 1fr;
 }
 .app-content > * {
   grid-column: 2

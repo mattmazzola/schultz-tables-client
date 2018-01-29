@@ -1,6 +1,6 @@
 .home-page {
   display: grid;
-  padding: 1em;
+  padding: 1em 0;
   justify-items: center;
   grid-gap: 2em;
   font-size: 1.2rem;

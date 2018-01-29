@@ -14,11 +14,23 @@
   font-size: 2.5rem;
 }
 
+@media (max-width: 450px) {
+  .game__header {
+    font-size: 1.5rem;
+  }
+}
+
 .game__footer {
   display: grid;
   grid-template: auto / repeat(auto-fit, minmax(1.5em, auto));
   line-height: 1.5;
   font-size: 2rem;
+}
+
+@media (max-width: 450px) {
+  .game__footer {
+    font-size: 1rem;
+  }
 }
 
 .game__table {
@@ -28,7 +40,6 @@
 .table {
   position: absolute;
   left: 0;
-  width: 600px;
   top: 0;
   bottom: 0;
   display: grid;
@@ -46,6 +57,11 @@
   cursor: pointer;
   background: white;
   font-size: 4rem;
+}
+@media (max-width: 450px) {
+  .table__cell {
+    font-size: 2rem;
+  }
 }
 
 .game-symbol {
@@ -74,6 +90,11 @@
 .button-close .icon-close {
   cursor: pointer;
   font-size: 4rem;
-  line-height: 3rem;
   vertical-align: middle;
+}
+
+@media (max-width: 450px) {
+  .button-close .icon-close {
+    font-size: 2rem;
+  }
 }

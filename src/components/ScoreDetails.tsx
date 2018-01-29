@@ -92,8 +92,8 @@ class ScoreDetails extends React.Component<Props, State> {
                             })}
                         </div>
                     </dd>
-                    <dt>Timeline:</dt>
-                    <dd>
+                    <dt className="no-chart-mobile">Timeline:</dt>
+                    <dd className="no-chart-mobile">
                         <LineChart className="score-details__line-chart" width={450} height={400} data={data} margin={{ top: 0, right: 0, bottom: 0, left: 0 }} >
                             <Line type="monotone" dataKey="time" stroke="#8884d8" />
                             <XAxis dataKey="name" ticks={tableLayout.expectedSequence} interval={0} />

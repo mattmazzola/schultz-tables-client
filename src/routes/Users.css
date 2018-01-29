@@ -12,6 +12,13 @@
   grid-gap: 1em;
 }
 
+.user > * {
+  word-wrap: break-word;
+  overflow: hidden;
+  max-width: 22ch;
+  text-overflow: ellipsis;
+}
+
 .user:not(:last-of-type) {
   border-bottom: 1px solid rgba(51,51,51, 0.25);
 }
