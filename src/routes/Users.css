@@ -15,7 +15,7 @@
 .user > * {
   word-wrap: break-word;
   overflow: hidden;
-  max-width: 22ch;
+  max-width: 28ch;
   text-overflow: ellipsis;
 }
 
