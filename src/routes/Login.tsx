@@ -22,7 +22,7 @@ class Login extends React.Component<Props, {}> {
     render() {
         return (
             <div className="login-page">
-                <button className="login-button" type="button" onClick={() => this.onClickLogin()}>Login</button>
+                <button className="login-button" type="button" onClick={() => this.onClickLogin()}>Login with Facebook</button>
             </div>
         )
     }

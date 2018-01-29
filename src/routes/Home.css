@@ -11,6 +11,7 @@
   padding: 0.75em 2em;
   color: white;
   background: #00A7F9;
+  border-radius: 3px;
   border: none;
   cursor: pointer;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1);
