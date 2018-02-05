@@ -137,3 +137,7 @@ export interface IDisplayScore {
     preview: IScore
     details: IScoreDetails
 }
+
+export interface ITableProperty {
+    className: string
+}

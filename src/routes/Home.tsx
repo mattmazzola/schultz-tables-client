@@ -23,7 +23,7 @@ interface State {
   signedStartTime: string | null
   symbols: string[]
   symbolsSelected: string
-  fonts: string[]
+  fonts: models.IOption<models.ITableProperty>[]
   fontSelected: string
   fontColors: string[]
   fontColorSelected: string
@@ -63,7 +63,7 @@ const initialState: State = {
   ],
   symbolsSelected: 'a',
   fonts: options.fonts,
-  fontSelected: options.fonts[1],
+  fontSelected: options.fonts[1].id,
   fontColors: options.fontColors,
   fontColorSelected: options.fontColors[1],
   cellColors: [
@@ -152,9 +152,14 @@ export class Home extends React.Component<Props, State> {
   }
 
   onChangeFont = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const font = event.target.value
+    const fontId = event.target.value
+    const font = this.state.fonts.find(f => f.id === fontId)
+    if (!font) {
+      throw new Error(`Could not find font by id: ${fontId}`)
+    }
+
     this.setState({
-      fontSelected: font
+      fontSelected: font.id
     })
   }
 
@@ -284,7 +289,7 @@ export class Home extends React.Component<Props, State> {
                 onChange={this.onChangeFont}
               >
                 {this.state.fonts.map((font, i) =>
-                  <option key={i} value={font}>{font}</option>
+                  <option key={font.id} value={font.id}>{font.name}</option>
                 )}
               </select>
 

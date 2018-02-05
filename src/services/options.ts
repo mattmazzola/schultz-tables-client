@@ -3,7 +3,7 @@ import * as models from '../types/models'
 export const presetTables: models.IOption<models.ITableConfig>[] = [
     {
         id: '0',
-        name: '4x4 Numbers - Black on Whte',
+        name: '4x4 Numbers - Black on White',
         value: {
             width: 4,
             height: 4,
@@ -86,8 +86,29 @@ export const presetTables: models.IOption<models.ITableConfig>[] = [
         }
     }
 ]
-export const fonts: string[] = [
-    'Arial'
+
+export const fonts: models.IOption<models.ITableProperty>[] = [
+    {
+        id: "0",
+        name: 'Arial',
+        value: {
+            className: 'font-class--arial'
+        }
+    },
+    {
+        id: "1",
+        name: 'Times New Roman',
+        value: {
+            className: 'font-class--times-new-roman'
+        }
+    },
+    {
+        id: "2",
+        name: 'Comic Sans',
+        value: {
+            className: 'font-class--comic-sans'
+        }
+    },
 ]
 
 export const fontColors: string[] = [
