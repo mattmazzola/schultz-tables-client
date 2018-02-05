@@ -17,7 +17,6 @@ import Login from './Login'
 import Scores from './Scores'
 import Users from './Users'
 import User from './User'
-import Profile from './Profile'
 import NoMatch from './NoMatch'
 
 const userIsAuthenticated = connectedRouterRedirect<any, ReduxState>({
@@ -45,7 +44,7 @@ const userIsNotAuthenticated = connectedRouterRedirect<any, ReduxState>({
 const ProtectedHome = userIsAuthenticated(Home)
 const ProtectedScores = userIsAuthenticated(Scores)
 const ProtectedUsers = userIsAuthenticated(Users)
-const ProtectedProfile = userIsAuthenticated(Profile)
+const ProtectedUser = userIsAuthenticated(User)
 const RedirectedLogin = userIsNotAuthenticated(Login)
 
 class App extends React.Component<Props, {}> {
@@ -71,7 +70,7 @@ class App extends React.Component<Props, {}> {
                   <div className="icon"><i className="material-icons">group</i></div>
                   <div className="label">User</div>
                 </NavLink>
-                <NavLink className="link" to="/profile" exact={true}>
+                <NavLink className="link" to={{ pathname: `/users/${this.props.user.id}`, state: { user: this.props.user } }} exact={true}>
                   <div className="icon"><i className="material-icons">account_circle</i></div>
                   <div className="label">Profile</div>
                 </NavLink>
@@ -84,8 +83,7 @@ class App extends React.Component<Props, {}> {
               <Route path="/login" exact={true} component={RedirectedLogin} />
               <Route path="/scores" exact={true} component={ProtectedScores} />
               <Route path="/users" exact={true} component={ProtectedUsers} />
-              <Route path="/profile" exact={true} component={ProtectedProfile} />
-              <Route path="/users/:userId" component={User} />
+              <Route path="/users/:userId" component={ProtectedUser} />
               <Route component={NoMatch} />
             </Switch>
           </main>
