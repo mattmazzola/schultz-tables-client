@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { logout, getUserScoresThunkAsync } from '../actions'
 import { ReduxState } from '../types'
+import Score from '../components/Score'
 import './User.css'
 
 interface ReceivedProps extends RouteComponentProps<any> {
@@ -67,7 +68,7 @@ export class User extends React.Component<Props, State> {
             <div className="scores">
                 {this.state.isLoading
                     ? <div className="score-loading">Loading...</div>
-                    : this.props.profile.map(s => <div key={s.id}>{s.durationMilliseconds}</div>)}
+                    : this.props.profile.map(score => <Score key={score.id} score={score} />)}
             </div>
         </div>
     }
