@@ -113,7 +113,7 @@ export interface IScoreRequest {
     startTime: Date
     tableHeight: number
     tableWidth: number
-    tableProperties: string[]
+    tableProperties: KVPair<string, string>[]
     userSequence: IUserSelection[]
 }
 

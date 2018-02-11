@@ -187,6 +187,8 @@ export class Home extends React.Component<Props, State> {
           isCompleted = true
           const endTime = new Date()
           duration = endTime.getTime() - prevGameState.startTime.getTime()
+          const gameTypeSelected = this.state.gameTypes.find(t => t.id === this.state.gameTypeIdSelected)!
+          const gameOptions = gameTypeSelected.value
 
           const scoreRequest: models.IScoreRequest = {
             duration,
@@ -197,7 +199,7 @@ export class Home extends React.Component<Props, State> {
             signedStartTime: prevState.signedStartTime!,
             startTime: prevState.gameState.startTime,
             tableHeight: prevState.height,
-            tableProperties: [],
+            tableProperties: Object.entries(gameOptions).map(([key, value]) => ({ key, value })),
             tableWidth: prevState.width,
             userSequence
           }

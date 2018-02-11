@@ -4,6 +4,11 @@ import * as models from '../types/models'
 import { ThunkAction } from 'redux-thunk'
 import { microsoftProvider } from '../providers/microsoft'
 import RSA from 'react-simple-auth'
+const baseUri = process.env.NODE_ENV === 'development'
+    ? 'https://localhost:44311'
+    : 'https://schultztables.azurewebsites.net'
+    
+console.log(`using baseUri: `, baseUri)
 
 export const startScoreAsync = (): ActionObject =>
     ({
@@ -24,7 +29,7 @@ export const startScoreRejected = (reason: string): ActionObject =>
 
 export const startScoreThunkAsync = (): ThunkAction<any, any, any> => {
     return (dispatch) => {
-        return fetch('https://schultztables.azurewebsites.net/api/scores/start', {
+        return fetch(`${baseUri}/api/scores/start`, {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
@@ -71,7 +76,7 @@ export const addScoreRejected = (reason: string): ActionObject =>
 
 export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: models.IUser): ThunkAction<any, any, any> => {
     return (dispatch) => {
-        return fetch('https://schultztables.azurewebsites.net/api/scores', {
+        return fetch(`${baseUri}/api/scores`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -125,7 +130,7 @@ export const getScoresRejected = (reason: string): ActionObject =>
 
 export const getScoresThunkAsync = (): ThunkAction<any, any, any> => {
     return (dispatch) => {
-        return fetch('https://schultztables.azurewebsites.net/api/scores', {
+        return fetch(`${baseUri}/api/scores`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
