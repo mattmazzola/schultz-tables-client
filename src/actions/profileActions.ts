@@ -4,7 +4,10 @@ import * as models from '../types/models'
 import { ThunkAction } from 'redux-thunk'
 import { microsoftProvider } from '../providers/microsoft'
 import RSA from 'react-simple-auth'
-
+const baseUri = process.env.NODE_ENV === 'development'
+    ? 'https://localhost:44311'
+    : 'https://schultztables.azurewebsites.net'
+    
 export const getUserScoresAsync = (): ActionObject =>
 ({
     type: AT.GET_USER_SCORES_ASYNC
@@ -24,7 +27,7 @@ export const getUserScoresRejected = (reason: string): ActionObject =>
 
 export const getUserScoresThunkAsync = (userId: string): ThunkAction<any, any, any> => {
     return (dispatch) => {
-        return fetch(`https://schultztables.azurewebsites.net/api/scores?userId=${userId}`, {
+        return fetch(`${baseUri}/api/scores?userId=${userId}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',

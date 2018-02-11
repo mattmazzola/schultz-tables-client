@@ -70,7 +70,6 @@ export interface IScoresResponse {
 export interface IScore {
     durationMilliseconds: number,
     id: string
-    scoreDetailsId: string
     userId: string
     user: IUser | undefined
 }

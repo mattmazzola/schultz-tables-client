@@ -56,15 +56,16 @@ export const startScoreThunkAsync = (): ThunkAction<any, any, any> => {
     }
 }
 
-export const addScoreAsync = (score: models.IScoreRequest): ActionObject =>
+export const addScoreAsync = (tableTypeId: string, score: models.IScoreRequest): ActionObject =>
     ({
         type: AT.ADD_SCORE_ASYNC,
         score
     })
 
-export const addScoreFulfilled = (score: models.IScore): ActionObject =>
+export const addScoreFulfilled = (tableTypeId: string, score: models.IScore): ActionObject =>
     ({
         type: AT.ADD_SCORE_FULFILLED,
+        tableTypeId,
         score
     })
 
@@ -98,11 +99,10 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
                 const score: models.IScore = {
                     durationMilliseconds: scoreResponse.durationMilliseconds,
                     id: scoreResponse.id,
-                    scoreDetailsId: scoreResponse.id,
                     userId: scoreResponse.userId,
                     user
                 }
-                dispatch(addScoreFulfilled(score))
+                dispatch(addScoreFulfilled(scoreResponse.tableTypeId, score))
             })
             .catch(error => {
                 console.error(error)
@@ -111,14 +111,16 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
     }
 }
 
-export const getScoresAsync = (): ActionObject =>
+export const getScoresAsync = (tableTypeId: string): ActionObject =>
     ({
-        type: AT.GET_SCORES_ASYNC
+        type: AT.GET_SCORES_ASYNC,
+        tableTypeId
     })
 
-export const getScoresFulfilled = (scores: models.IScore[]): ActionObject =>
+export const getScoresFulfilled = (tableTypeId: string, scores: models.IScore[]): ActionObject =>
     ({
         type: AT.GET_SCORES_FULFILLED,
+        tableTypeId,
         scores
     })
 
@@ -128,9 +130,9 @@ export const getScoresRejected = (reason: string): ActionObject =>
         reason
     })
 
-export const getScoresThunkAsync = (): ThunkAction<any, any, any> => {
+export const getScoresThunkAsync = (tableTypeId: string): ThunkAction<any, any, any> => {
     return (dispatch) => {
-        return fetch(`${baseUri}/api/scores`, {
+        return fetch(`${baseUri}/api/scores?tableTypeId=${encodeURIComponent(tableTypeId)}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -152,11 +154,57 @@ export const getScoresThunkAsync = (): ThunkAction<any, any, any> => {
                     score.user = user
                     return score
                 })
-                dispatch(getScoresFulfilled(scores))
+                dispatch(getScoresFulfilled(tableTypeId, scores))
             })
             .catch(error => {
                 console.error(error)
                 dispatch(getScoresRejected(error))
+            })
+    }
+}
+
+
+export const getTableTypesAsync = (): ActionObject =>
+    ({
+        type: AT.GET_TABLE_TYPES_ASYNC
+    })
+
+export const getTableTypesFulfilled = (tableTypes: models.ITableType[]): ActionObject =>
+    ({
+        type: AT.GET_TABLE_TYPES_FULFILLED,
+        tableTypes
+    })
+
+export const getTableTypesRejected = (reason: string): ActionObject =>
+    ({
+        type: AT.GET_TABLE_TYPES_REJECTED,
+        reason
+    })
+
+export const getTableTypesThunkAsync = (): ThunkAction<any, any, any> => {
+    return (dispatch) => {
+        return fetch(`${baseUri}/api/tableTypes`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+            }
+        })
+            .then(response => {
+                const json = response.json()
+                if (response.ok) {
+                    return json
+                }
+                else {
+                    throw new Error(JSON.stringify(json))
+                }
+            })
+            .then((tableTypes: models.ITableType[]) => {
+                dispatch(getTableTypesFulfilled(tableTypes))
+            })
+            .catch(error => {
+                console.error(error)
+                dispatch(getTableTypesRejected(error))
             })
     }
 }
@@ -178,9 +226,9 @@ export const getScoreDetailsRejected = (reason: string): ActionObject =>
         reason
     })
 
-export const getScoreDetailsThunkAsync = (scoreDetailsId: string): ThunkAction<Promise<models.IScoreDetails | void>, any, any> => {
+export const getScoreDetailsThunkAsync = (id: string): ThunkAction<Promise<models.IScoreDetails | void>, any, any> => {
     return (dispatch) => {
-        return fetch(`https://schultztables.azurewebsites.net/api/scores/${scoreDetailsId}/details`, {
+        return fetch(`${baseUri}/api/scores/${id}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',

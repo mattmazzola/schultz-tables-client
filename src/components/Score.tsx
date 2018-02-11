@@ -42,7 +42,7 @@ class Score extends React.Component<Props, State> {
             isDetailsLoading: true
         })
         const getScoreDetails: (id: string) => Promise<models.IScoreDetails> = this.props.getScoreDetailsThunkAsync as any
-        const scoreDetails = await getScoreDetails(score.scoreDetailsId)
+        const scoreDetails = await getScoreDetails(score.id)
 
         this.setState({
             scoreDetails,

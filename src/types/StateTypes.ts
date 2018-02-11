@@ -1,6 +1,9 @@
 import * as models from './models'
 
-export type ScoresState = models.IScore[]
+export interface ScoresState {
+    tableTypes: models.ITableType[]
+    scoresByType: Map<string, models.IScore[]>
+}
 
 export type UsersState = models.IUser[]
 

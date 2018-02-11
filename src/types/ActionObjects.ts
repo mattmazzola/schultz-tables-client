@@ -22,6 +22,7 @@ export interface AddScoreAsync {
 
 export interface AddScoreFulfilled {
     type: AT.ADD_SCORE_FULFILLED
+    tableTypeId: string
     score: models.IScore
 }
 
@@ -38,6 +39,20 @@ export interface UserLoginAction {
 
 export interface UserLogoutAction {
     type: AT.USER_LOGOUT
+}
+
+export interface GetTableTypesAsyncAction {
+    type: AT.GET_TABLE_TYPES_ASYNC
+}
+
+export interface GetTableTypesFulfilledAction {
+    type: AT.GET_TABLE_TYPES_FULFILLED
+    tableTypes: models.ITableType[]
+}
+
+export interface GetTableTypesRejectedAction {
+    type: AT.GET_TABLE_TYPES_REJECTED
+    reason: string
 }
 
 export interface GetUsersAsyncAction {
@@ -57,10 +72,12 @@ export interface GetUsersRejectedAction {
 
 export interface GetScoresAsyncAction {
     type: AT.GET_SCORES_ASYNC
+    tableTypeId: string
 }
 
 export interface GetScoresFulfilledAction {
     type: AT.GET_SCORES_FULFILLED
+    tableTypeId: string
     scores: models.IScore[]
 }
 
@@ -118,4 +135,7 @@ export type ActionObject =
     GetScoreDetailsRejectedAction |
     GetUserScoresAsyncAction |
     GetUserScoresFulfilledAction |
-    GetUserScoresRejectedAction 
+    GetUserScoresRejectedAction |
+    GetTableTypesAsyncAction |
+    GetTableTypesFulfilledAction |
+    GetTableTypesRejectedAction

@@ -188,7 +188,7 @@ export class Home extends React.Component<Props, State> {
           const endTime = new Date()
           duration = endTime.getTime() - prevGameState.startTime.getTime()
           const gameTypeSelected = this.state.gameTypes.find(t => t.id === this.state.gameTypeIdSelected)!
-          const gameOptions = gameTypeSelected.value
+          const { width, height, ...gameOptions } = gameTypeSelected.value
 
           const scoreRequest: models.IScoreRequest = {
             duration,
@@ -198,9 +198,9 @@ export class Home extends React.Component<Props, State> {
             randomizedSequence: prevState.table.cells.map(c => parseInt(c.text)),
             signedStartTime: prevState.signedStartTime!,
             startTime: prevState.gameState.startTime,
-            tableHeight: prevState.height,
+            tableHeight: height,
             tableProperties: Object.entries(gameOptions).map(([key, value]) => ({ key, value })),
-            tableWidth: prevState.width,
+            tableWidth: width,
             userSequence
           }
 
