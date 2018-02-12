@@ -4,7 +4,8 @@ import * as models from '../types/models'
 import { ThunkAction } from 'redux-thunk'
 import { microsoftProvider } from '../providers/microsoft'
 import RSA from 'react-simple-auth'
-const baseUri = process.env.NODE_ENV === 'development'
+console.log(`REACT_APP_ENV: `, process.env.REACT_APP_ENV)
+const baseUri = process.env.REACT_APP_ENV === 'development'
     ? 'https://localhost:44311'
     : 'https://schultztables.azurewebsites.net'
     
