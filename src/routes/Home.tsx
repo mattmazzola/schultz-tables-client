@@ -84,6 +84,7 @@ const initialState: State = {
 }
 
 export class Home extends React.Component<Props, State> {
+  audio = new AudioContext()
   state = initialState
 
   onClickStart() {
@@ -210,6 +211,10 @@ export class Home extends React.Component<Props, State> {
         expectedSymbolIndex += 1
       }
 
+      if (!correct) {
+        this.playBuzzerSound()
+      }
+
       return {
         gameState: {
           ...prevGameState,
@@ -220,6 +225,20 @@ export class Home extends React.Component<Props, State> {
         }
       }
     })
+  }
+  
+  playBuzzerSound() {
+    const oscillator = this.audio.createOscillator()
+    oscillator.type = 'sine'
+    oscillator.frequency.value = 300
+    oscillator.connect(this.audio.destination)
+    oscillator.start(0)
+
+    setTimeout(() => {
+      oscillator.stop()
+    }, 100)
+
+    return oscillator;
   }
 
   render() {
