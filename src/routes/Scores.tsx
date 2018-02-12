@@ -70,10 +70,10 @@ class Scores extends React.Component<Props, State> {
             ? <div>Loading...</div>
             : <select onChange={this.onChangeTableType} value={this.state.tableTypeIdSelected}>
                 {this.props.scores.tableTypes.map(tableType => 
-                  <option key={tableType.id} value={tableType.id}>{tableType.height} - {tableType.width} {tableType.properties
+                  <option key={tableType.id} value={tableType.id}>{tableType.height} - {tableType.width} {/* tableType.properties
                     .filter((x, i) => i < 3)
                     .map(({ key, value }) => `${key}: ${value}`)
-                    .join(', ')}
+                  .join(', ') */}
                   </option>
               )}
           </select>}
