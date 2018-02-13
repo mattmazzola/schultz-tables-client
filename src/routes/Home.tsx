@@ -216,6 +216,7 @@ export class Home extends React.Component<Props, State> {
       }
 
       return {
+        ...prevState,
         gameState: {
           ...prevGameState,
           duration,

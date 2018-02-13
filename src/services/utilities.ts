@@ -85,7 +85,7 @@ export const generateTable = (tableConfig: models.ITableConfig, sequence: models
             x,
             y,
             text: symbol,
-            classes: []
+            classes: [`cell--text-effect-${tableConfig.textEffect}`]
         }
     })
 

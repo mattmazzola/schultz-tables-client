@@ -124,7 +124,7 @@ export default class Game extends React.Component<Props, State> {
                 <div className="game__table" ref={this.onRef}>
                     <div className="table" style={tableStyle}>
                         {this.props.table.cells.map((cell, i) =>
-                            <div key={i} className="table__cell" onClick={() => this.props.onClickCell(cell)}>
+                            <div key={i} className={`table__cell ${cell.classes.join(' ')}`} onClick={() => this.props.onClickCell(cell)}>
                                 {cell.text}
                             </div>
                         )}
