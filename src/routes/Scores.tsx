@@ -62,6 +62,10 @@ class Scores extends React.Component<Props, State> {
     })
   }
 
+  onClickRefresh = () => {
+    this.props.getScoresThunkAsync(this.state.tableTypeIdSelected)
+  }
+
   render() {
     return (
       <div className="scores-page">
@@ -77,6 +81,7 @@ class Scores extends React.Component<Props, State> {
                   </option>
               )}
           </select>}
+          <button className="score-refresh-button" onClick={this.onClickRefresh} disabled={this.state.tableTypeIdSelected === null}>Refresh</button>
         </div>
         <div className="scores">
           {this.state.tableTypeIdSelected === ''
