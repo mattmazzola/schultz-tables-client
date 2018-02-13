@@ -76,16 +76,28 @@ export const generateSymbols = (tableConfig: models.ITableConfig): models.ISeque
     }
 }
 
+const rainbowClasses = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'].map(c => `cell--color-${c}`)
+
 export const generateTable = (tableConfig: models.ITableConfig, sequence: models.ISequence): models.ITable => {
     const cells = sequence.randomizedSequence.map((symbol, i) => {
         const x = i % tableConfig.width + 1
         const y = Math.floor(i / tableConfig.width) + 1
 
+        const classes = []
+        if (tableConfig.textEffect === 'shadow') {
+            classes.push('cell--text-effect-shadow')
+        }
+        
+        if (tableConfig.cellColor === 'rainbow') {
+            const randomColorClass = rainbowClasses[Math.floor(Math.random() * rainbowClasses.length)]
+            classes.push(randomColorClass)
+        }
+
         return {
             x,
             y,
             text: symbol,
-            classes: [`cell--text-effect-${tableConfig.textEffect}`]
+            classes
         }
     })
 

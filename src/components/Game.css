@@ -97,6 +97,31 @@
   text-shadow: 0px 0px 10px rgba(0,0,0,0.9);
 }
 
+.cell--color-red {
+  background-color: red;
+}
+.cell--color-orange {
+  background-color: orange;
+}
+.cell--color-yellow {
+  background-color: yellow;
+}
+.cell--color-green {
+  background-color: green;
+}
+.cell--color-blue {
+  color: white;
+  background-color: blue;
+}
+.cell--color-indigo {
+  background-color: indigo;
+  color: white;
+}
+.cell--color-violet {
+  color: white;
+  background-color: violet;
+}
+
 .game-symbol {
   color: rgba(255, 255, 255, 0.5);
   border-radius: 3px;

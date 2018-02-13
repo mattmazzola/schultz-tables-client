@@ -84,6 +84,20 @@ export const presetTables: models.IOption<models.ITableConfig>[] = [
             textEffect: 'shadow',
             animation: 'none'
         }
+    },
+    {
+        id: '5',
+        name: '5x5 Numbers with Rainbow',
+        value: {
+            width: 5,
+            height: 5,
+            symbols: 'numbers',
+            font: 'Arial',
+            fontColor: 'black',
+            cellColor: 'rainbow',
+            textEffect: 'none',
+            animation: 'none'
+        }
     }
 ]
 
