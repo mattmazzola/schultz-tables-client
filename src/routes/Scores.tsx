@@ -63,6 +63,7 @@ class Scores extends React.Component<Props, State> {
   }
 
   onClickRefresh = () => {
+    this.props.getTableTypesThunkAsync()
     this.props.getScoresThunkAsync(this.state.tableTypeIdSelected)
   }
 
