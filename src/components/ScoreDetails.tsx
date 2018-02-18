@@ -37,6 +37,7 @@ class ScoreDetails extends React.Component<Props, State> {
         const maxYAxis = Math.ceil(this.props.durationMilliseconds/1000) + 1
         const verticalTicks = Array(maxYAxis).fill(0).map((_, i) => i)
         const tableForPreview: models.ITable = {
+            classes: [],
             width: tableLayout.width,
             height: tableLayout.height,
             expectedSequence: tableLayout.expectedSequence,

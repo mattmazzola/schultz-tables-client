@@ -45,6 +45,7 @@ export interface IGameState {
 }
 
 export interface ITable {
+    classes: string[]
     width: number
     height: number
     expectedSequence: string[]

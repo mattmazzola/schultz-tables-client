@@ -122,7 +122,7 @@ export default class Game extends React.Component<Props, State> {
                     <button className={`button-close ${this.props.gameState.isCompleted ? 'button-close--completed' : ''}`} type="button" onClick={() => this.props.onClickClose()}><i className="icon-close material-icons">clear</i></button>
                 </header>
                 <div className="game__table" ref={this.onRef}>
-                    <div className="table" style={tableStyle}>
+                    <div className={`table ${this.props.table.classes.join(' ')}`} style={tableStyle}>
                         {this.props.table.cells.map((cell, i) =>
                             <div key={i} className={`table__cell ${cell.classes.join(' ')}`} onClick={() => this.props.onClickCell(cell)}>
                                 {cell.text}

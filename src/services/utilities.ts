@@ -101,7 +101,19 @@ export const generateTable = (tableConfig: models.ITableConfig, sequence: models
         }
     })
 
+    const classes: string[] = []
+    if (tableConfig.animation === 'linear-horizontal') {
+        classes.push('table--animation-linear-horizontal')
+    }
+    else if (tableConfig.animation === 'linear-diagonal') {
+        classes.push('table--animation-linear-diagonal')
+    }
+    else if (tableConfig.animation === 'rotation') {
+        classes.push(`table--animation-rotation`)
+    }
+
     return {
+        classes,
         width: tableConfig.width,
         height: tableConfig.height,
         expectedSequence: sequence.expectedSequence,

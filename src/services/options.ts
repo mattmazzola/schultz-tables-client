@@ -98,6 +98,48 @@ export const presetTables: models.IOption<models.ITableConfig>[] = [
             textEffect: 'none',
             animation: 'none'
         }
+    },
+    {
+        id: '6',
+        name: '5x5 Numbers with shake horizontal',
+        value: {
+            width: 5,
+            height: 5,
+            symbols: 'numbers',
+            font: 'Arial',
+            fontColor: 'black',
+            cellColor: 'white',
+            textEffect: 'none',
+            animation: 'linear-horizontal'
+        }
+    },
+    {
+        id: '7',
+        name: '5x5 Numbers with shake diagonal',
+        value: {
+            width: 5,
+            height: 5,
+            symbols: 'numbers',
+            font: 'Arial',
+            fontColor: 'black',
+            cellColor: 'white',
+            textEffect: 'none',
+            animation: 'linear-diagonal'
+        }
+    },
+    {
+        id: '8',
+        name: '5x5 Numbers with rotation',
+        value: {
+            width: 5,
+            height: 5,
+            symbols: 'numbers',
+            font: 'Arial',
+            fontColor: 'black',
+            cellColor: 'white',
+            textEffect: 'none',
+            animation: 'rotation'
+        }
     }
 ]
 
