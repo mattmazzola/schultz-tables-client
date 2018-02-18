@@ -31,8 +31,10 @@ class ScoreDetails extends React.Component<Props, State> {
             .map<any>(s => (
                 { name: s.cell.text, time: getTimeDifference(s.time as any, scoreDetails.startTime as any) }
             ))
-        const maxYAxis = Math.ceil(this.props.durationMilliseconds/1000)
-        const horizontalPoints = Array(maxYAxis).fill(0).map((_, i) => i + 1)
+
+        const horizontalTicks = tableLayout.expectedSequence
+        const maxYAxis = Math.ceil(this.props.durationMilliseconds/1000) + 1
+        const verticalTicks = Array(maxYAxis).fill(0).map((_, i) => i)
 
         return (
             <div>
@@ -57,16 +59,16 @@ class ScoreDetails extends React.Component<Props, State> {
                     <dt><i className="material-icons">format_list_numbered</i> Sequence</dt>
                     <dd>
                         <div className="sequence">
-                            <div>
+                            <div className="heading">
                                 <i className="material-icons">playlist_add_check</i>
                             </div>
-                            <div>
+                            <div className="heading">
                                 <i className="material-icons">translate</i>
                             </div>
-                            <div>
+                            <div className="heading">
                                 <i className="material-icons">access_time</i>
                             </div>
-                            <div>
+                            <div className="heading">
                                 <i className="material-icons">access_time</i>
                             </div>
 
@@ -84,7 +86,7 @@ class ScoreDetails extends React.Component<Props, State> {
                                                 ? <i className="material-icons correct">done</i>
                                                 : <i className="material-icons incorrect">error_outline</i>}
                                         </div>
-                                        <div>{o.cell.text}</div>
+                                        <div className="text-center">{o.cell.text}</div>
                                         <div>+{duration}</div>
                                         <div>+{totalDuration}</div>
                                     </React.Fragment>
@@ -96,8 +98,8 @@ class ScoreDetails extends React.Component<Props, State> {
                     <dd className="no-chart-mobile">
                         <LineChart className="score-details__line-chart" width={450} height={400} data={data} margin={{ top: 0, right: 0, bottom: 0, left: 0 }} >
                             <Line type="monotone" dataKey="time" stroke="#8884d8" />
-                            <XAxis dataKey="name" ticks={tableLayout.expectedSequence} interval={0} />
-                            <YAxis dataKey="time" domain={[0, maxYAxis]} ticks={horizontalPoints}  />
+                            <XAxis dataKey="name" ticks={horizontalTicks} interval={0} />
+                            <YAxis dataKey="time" domain={[0, maxYAxis]} ticks={verticalTicks} />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                         </LineChart>

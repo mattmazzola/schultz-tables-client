@@ -106,8 +106,8 @@ export interface KVPair<K,V> {
 export interface IScoreRequest {
     duration: number
     endTime: Date
-    expectedSequence: number[]
-    randomizedSequence: number[]
+    expectedSequence: string[]
+    randomizedSequence: string[]
     signedStartTime: string
     startTime: Date
     tableHeight: number

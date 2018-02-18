@@ -9,13 +9,7 @@
   font-size: 1.2rem;
   border-radius: 3px;
   border: 1px solid rgba(51,51,51, 0.25);
-}
-
-.scores-types {
-  display: grid;
-  grid-gap: 1em;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(200px, 30%) min-content 1fr;
+  max-width: 500px;
 }
 
 .score-refresh-button {
@@ -24,9 +18,13 @@
   border: none;
   border-radius: 3px;
   background: #00A7F9;
-  padding: 0 1.5em;
+  padding: 0.5em 1.5em;
   font-size: 1.2rem;
   cursor: pointer;
+}
+
+.score-refresh-button i.material-icons {
+  vertical-align: bottom;
 }
 
 .scores {

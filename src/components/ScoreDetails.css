@@ -28,6 +28,11 @@
     display: grid;
     grid-template-columns: repeat(4, min-content);
     grid-gap: 0.25em 1em;
+}
+
+.score-details .sequence .heading,
+.score-details .sequence .text-center
+{
     text-align: center;
 }
 

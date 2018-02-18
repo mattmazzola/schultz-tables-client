@@ -194,9 +194,9 @@ export class Home extends React.Component<Props, State> {
           const scoreRequest: models.IScoreRequest = {
             duration,
             endTime,
-            expectedSequence: prevState.table.expectedSequence.map(s => parseInt(s)),
+            expectedSequence: prevState.table.expectedSequence,
             // TODO: API should accept cells so we can do analysis on harder arangement of numbers
-            randomizedSequence: prevState.table.cells.map(c => parseInt(c.text)),
+            randomizedSequence: prevState.table.cells.map(c => c.text),
             signedStartTime: prevState.signedStartTime!,
             startTime: prevState.gameState.startTime,
             tableHeight: height,

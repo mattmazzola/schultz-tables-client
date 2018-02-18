@@ -75,14 +75,19 @@ class Scores extends React.Component<Props, State> {
             ? <div>Loading...</div>
             : <select onChange={this.onChangeTableType} value={this.state.tableTypeIdSelected}>
                 {this.props.scores.tableTypes.map(tableType => 
-                  <option key={tableType.id} value={tableType.id}>{tableType.height} - {tableType.width} {/* tableType.properties
-                    .filter((x, i) => i < 3)
-                    .map(({ key, value }) => `${key}: ${value}`)
-                  .join(', ') */}
+                  <option key={tableType.id} value={tableType.id}>{tableType.width} x {tableType.height} - {tableType.properties
+                    .filter(({ key }) => {
+                      console.log(key)
+                      return ['symbols', 'fontColor', 'cellColor'].includes(key)
+                    })
+                    .map(({ value }) => `${value}`)
+                    .join(', ')}
                   </option>
               )}
           </select>}
-          <button className="score-refresh-button" onClick={this.onClickRefresh} disabled={this.state.tableTypeIdSelected === null}>Refresh</button>
+        </div>
+        <div>
+          <button className="score-refresh-button" onClick={this.onClickRefresh} disabled={this.state.tableTypeIdSelected === null}><i className="material-icons">refresh</i> Refresh</button>
         </div>
         <div className="scores">
           {this.state.tableTypeIdSelected === ''
