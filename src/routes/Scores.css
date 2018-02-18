@@ -12,18 +12,25 @@
   max-width: 500px;
 }
 
-.score-refresh-button {
+.score-refresh-button,
+.scores-loadmore-button {
   color: white;
   background: none;
   border: none;
   border-radius: 3px;
   background: #00A7F9;
-  padding: 0.5em 1.5em;
+  padding: 0.5em 1em;
   font-size: 1.2rem;
   cursor: pointer;
 }
 
-.score-refresh-button i.material-icons {
+.scores-loadmore-button:disabled {
+  background-color: #ccc;
+  color: rgb(51,51,51)
+}
+
+.score-refresh-button i.material-icons,
+.scores-loadmore-button i.material-icons {
   vertical-align: bottom;
 }
 

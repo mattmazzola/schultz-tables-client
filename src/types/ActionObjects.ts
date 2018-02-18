@@ -78,7 +78,7 @@ export interface GetScoresAsyncAction {
 export interface GetScoresFulfilledAction {
     type: AT.GET_SCORES_FULFILLED
     tableTypeId: string
-    scores: models.IScore[]
+    scoreResponse: models.IScoresResponse
 }
 
 export interface GetScoresRejectedAction {

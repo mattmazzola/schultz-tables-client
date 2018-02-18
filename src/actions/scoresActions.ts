@@ -117,11 +117,11 @@ export const getScoresAsync = (tableTypeId: string): ActionObject =>
         tableTypeId
     })
 
-export const getScoresFulfilled = (tableTypeId: string, scores: models.IScore[]): ActionObject =>
+export const getScoresFulfilled = (tableTypeId: string, scoreResponse: models.IScoresResponse): ActionObject =>
     ({
         type: AT.GET_SCORES_FULFILLED,
         tableTypeId,
-        scores
+        scoreResponse
     })
 
 export const getScoresRejected = (reason: string): ActionObject =>
@@ -149,12 +149,11 @@ export const getScoresThunkAsync = (tableTypeId: string): ThunkAction<any, any, 
                 }
             })
             .then((scoresResponse: models.IScoresResponse) => {
-                const scores = scoresResponse.scores.map(score => {
+                scoresResponse.scores.forEach(score => {
                     const user = scoresResponse.users.find(u => u.id === score.userId)
                     score.user = user
-                    return score
                 })
-                dispatch(getScoresFulfilled(tableTypeId, scores))
+                dispatch(getScoresFulfilled(tableTypeId, scoresResponse))
             })
             .catch(error => {
                 console.error(error)

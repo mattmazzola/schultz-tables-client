@@ -7,6 +7,7 @@ import * as models from '../types/models'
 import * as moment from 'moment'
 import { getTimeDifference } from '../services/utilities'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
+import GamePreview from './GamePreview'
 import './ScoreDetails.css'
 
 interface ReceivedProps {
@@ -35,6 +36,20 @@ class ScoreDetails extends React.Component<Props, State> {
         const horizontalTicks = tableLayout.expectedSequence
         const maxYAxis = Math.ceil(this.props.durationMilliseconds/1000) + 1
         const verticalTicks = Array(maxYAxis).fill(0).map((_, i) => i)
+        const tableForPreview: models.ITable = {
+            width: tableLayout.width,
+            height: tableLayout.height,
+            expectedSequence: tableLayout.expectedSequence,
+            cells: tableLayout.randomizedSequence.reduce<models.ICell[]>((cells, symbol, i, seq) => {
+                cells.push({
+                    classes: [],
+                    text: symbol,
+                    x: i,
+                    y: i
+                })
+                return cells
+            }, [])
+        }
 
         return (
             <div>
@@ -103,6 +118,10 @@ class ScoreDetails extends React.Component<Props, State> {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                         </LineChart>
+                    </dd>
+                    <dt className="game-preview">Game:</dt>
+                    <dd>
+                        <GamePreview table={tableForPreview} />
                     </dd>
                 </dl>
             </div>

@@ -6,7 +6,7 @@ import { Reducer } from 'redux'
 
 const initialState: ScoresState = {
     tableTypes: [],
-    scoresByType: new Map<string, models.IScore[]>()
+    scoresByType: new Map<string, models.IScoresResponse>()
 }
 
 const reducer: Reducer<ScoresState> = (state = initialState, action: ActionObject): ScoresState => {
@@ -19,15 +19,23 @@ const reducer: Reducer<ScoresState> = (state = initialState, action: ActionObjec
         case AT.GET_SCORES_FULFILLED:
             return {
                 ...state,
-                scoresByType: new Map<string, models.IScore[]>(state.scoresByType.entries()).set(action.tableTypeId, action.scores)
+                scoresByType: new Map<string, models.IScoresResponse>(state.scoresByType.entries()).set(action.tableTypeId, action.scoreResponse)
             }
         case AT.ADD_SCORE_FULFILLED:
-            const prevScores = state.scoresByType.get(action.tableTypeId) || []
-            const nextScores = [...prevScores, action.score]
+            const prevScoreResponse = state.scoresByType.get(action.tableTypeId) || {
+                scores: [],
+                users: [],
+                continuationToken: null
+            }
+
+            const nextScoresResponse = {
+                ...prevScoreResponse,
+                scores: [...prevScoreResponse.scores, action.score]
+            }
 
             return {
                 ...state,
-                scoresByType: new Map<string, models.IScore[]>(state.scoresByType.entries()).set(action.tableTypeId, nextScores)
+                scoresByType: new Map<string, models.IScoresResponse>(state.scoresByType.entries()).set(action.tableTypeId, nextScoresResponse)
             }
         default:
             return state

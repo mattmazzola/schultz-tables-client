@@ -65,6 +65,7 @@ export interface IUser {
 export interface IScoresResponse {
     scores: IScore[]
     users: IUser[]
+    continuationToken: string | null
 }
 
 export interface IScore {

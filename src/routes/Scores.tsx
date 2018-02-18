@@ -67,7 +67,14 @@ class Scores extends React.Component<Props, State> {
     this.props.getScoresThunkAsync(this.state.tableTypeIdSelected)
   }
 
+  onClickLoadMore = (continuationToken: string) => {
+    if (continuationToken !== null) {
+      console.log('onClick Load more', continuationToken)
+    }
+  }
+
   render() {
+    const scoresByType = this.props.scores.scoresByType.get(this.state.tableTypeIdSelected)
     return (
       <div className="scores-page">
         <div className="scores-types">
@@ -92,9 +99,14 @@ class Scores extends React.Component<Props, State> {
         <div className="scores">
           {this.state.tableTypeIdSelected === ''
             ? <div className="score-loading">Loading...</div>
-            : !this.props.scores.scoresByType.has(this.state.tableTypeIdSelected)
+            : !scoresByType
               ? <div className="score-loading">No scores for this table type</div>
-              : this.props.scores.scoresByType.get(this.state.tableTypeIdSelected)!.map(score => <Score key={score.id} score={score} />)}
+              : <div>
+                {scoresByType!.scores.map(score => <Score key={score.id} score={score} />)}
+              </div>}
+        </div>
+        <div>
+            {scoresByType && <button className="scores-loadmore-button" onClick={() => this.onClickLoadMore(scoresByType.continuationToken!)} disabled={scoresByType!.continuationToken === null}><i className="material-icons">file_download</i> Load More</button>}
         </div>
       </div>
     );
