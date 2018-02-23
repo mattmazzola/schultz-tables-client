@@ -14,10 +14,12 @@ export const getUserScoresAsync = (): ActionObject =>
     type: AT.GET_USER_SCORES_ASYNC
 })
 
-export const getUserScoresFulfilled = (scores: models.IScore[]): ActionObject =>
+export const getUserScoresFulfilled = (userId: string, tableTypeId: string, scoresResponse: models.IScoresResponse): ActionObject =>
 ({
     type: AT.GET_USER_SCORES_FULFILLED,
-    scores
+    userId,
+    tableTypeId,
+    scoresResponse
 })
 
 export const getUserScoresRejected = (reason: string): ActionObject =>
@@ -26,9 +28,9 @@ export const getUserScoresRejected = (reason: string): ActionObject =>
     reason
 })
 
-export const getUserScoresThunkAsync = (userId: string): ThunkAction<any, any, any> => {
+export const getUserScoresThunkAsync = (tableTypeId: string, userId: string): ThunkAction<any, any, any> => {
     return (dispatch) => {
-        return fetch(`${baseUri}/api/scores?userId=${userId}`, {
+        return fetch(`${baseUri}/api/scores?tableTypeId=${tableTypeId}&userId=${userId}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -45,12 +47,11 @@ export const getUserScoresThunkAsync = (userId: string): ThunkAction<any, any, a
                 }
             })
             .then((scoresResponse: models.IScoresResponse) => {
-                const scores = scoresResponse.scores.map(score => {
+                scoresResponse.scores.map(score => {
                     const user = scoresResponse.users.find(u => u.id === score.userId)
                     score.user = user
-                    return score
                 })
-                dispatch(getUserScoresFulfilled(scores))
+                dispatch(getUserScoresFulfilled(userId, tableTypeId, scoresResponse))
             })
             .catch(error => {
                 console.error(error)

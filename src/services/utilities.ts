@@ -135,3 +135,6 @@ export const generateDefaultGameState = () =>
 
 export const getTimeDifference = (timeA: string, timeB: string) =>
     moment.duration(moment(timeA).diff(moment(timeB))).asSeconds()
+
+export const getUserTableTypeKey = (userId: string, tableTypeId: string) =>
+    `${userId}_${tableTypeId}`

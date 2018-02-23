@@ -7,7 +7,10 @@ export interface ScoresState {
 
 export type UsersState = models.IUser[]
 
-export type ProfileState = models.IScore[]
+export type ProfileState = {
+    tableTypes: models.ITableType[]
+    scoresByUserAndType: Map<string, models.IScoresResponse>
+}
 
 export interface UserState extends models.IUser{
     isLoggedIn: boolean

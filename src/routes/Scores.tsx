@@ -46,7 +46,6 @@ class Scores extends React.Component<Props, State> {
         this.props.getScoresThunkAsync(tableTypeIdSelected)
       }
     }
-
   }
 
   onChangeTableType = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -93,7 +92,7 @@ class Scores extends React.Component<Props, State> {
               )}
           </select>}
         </div>
-        <div>
+        <div className="score-refresh-container">
           <button className="score-refresh-button" onClick={this.onClickRefresh} disabled={this.state.tableTypeIdSelected === null}><i className="material-icons">refresh</i> Refresh</button>
         </div>
         <div className="scores">
@@ -106,7 +105,7 @@ class Scores extends React.Component<Props, State> {
               </div>}
         </div>
         <div>
-            {scoresByType && <button className="scores-loadmore-button" onClick={() => this.onClickLoadMore(scoresByType.continuationToken!)} disabled={scoresByType!.continuationToken === null}><i className="material-icons">file_download</i> Load More</button>}
+            {scoresByType && scoresByType!.continuationToken !== null && <button className="scores-loadmore-button" onClick={() => this.onClickLoadMore(scoresByType.continuationToken!)}><i className="material-icons">file_download</i> Load More</button>}
         </div>
       </div>
     );
