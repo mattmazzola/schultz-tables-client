@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { returntypeof } from 'react-redux-typescript'
 import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import { connect, Dispatch } from 'react-redux'
 import {
   BrowserRouter as Router,
   Switch,
@@ -19,6 +19,7 @@ import Users from './Users'
 import User from './User'
 import NoMatch from './NoMatch'
 
+// tslint:disable-next-line
 const userIsAuthenticated = connectedRouterRedirect<any, ReduxState>({
   // The url to redirect user to if they fail
   redirectPath: '/login',
@@ -29,6 +30,8 @@ const userIsAuthenticated = connectedRouterRedirect<any, ReduxState>({
 })
 
 const locationHelper = locationHelperBuilder({})
+
+// tslint:disable-next-line
 const userIsNotAuthenticated = connectedRouterRedirect<any, ReduxState>({
   // This sends the user either to the query param route if we have one, or to the landing page if none is specified and the user is already logged in
   redirectPath: (state, ownProps) => locationHelper.getRedirectQueryParam(ownProps) || '/',
@@ -93,9 +96,8 @@ class App extends React.Component<Props, {}> {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
-  return bindActionCreators({
-  }, dispatch)
+const mapDispatchToProps = (dispatch: Dispatch<ReduxState>) => {
+  return bindActionCreators({}, dispatch)
 }
 const mapStateToProps = (state: ReduxState) => {
   return {

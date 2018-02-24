@@ -1,6 +1,7 @@
 import * as models from '../types/models'
 import * as moment from 'moment'
 
+/* tslint:disable */
 export function guid(): string {
     var d = new Date().getTime()
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c: string) {
@@ -9,6 +10,7 @@ export function guid(): string {
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16)
     })
 }
+/* tslint:enable */
 
 export const randomize = <T>(xs: T[]): T[] => {
     let unrandomized = xs.slice(0);
@@ -83,37 +85,35 @@ export const generateTable = (tableConfig: models.ITableConfig, sequence: models
         const x = i % tableConfig.width + 1
         const y = Math.floor(i / tableConfig.width) + 1
 
-        const classes = []
+        const cellClasses = []
         if (tableConfig.textEffect === 'shadow') {
-            classes.push('cell--text-effect-shadow')
+            cellClasses.push('cell--text-effect-shadow')
         }
         
         if (tableConfig.cellColor === 'rainbow') {
             const randomColorClass = rainbowClasses[Math.floor(Math.random() * rainbowClasses.length)]
-            classes.push(randomColorClass)
+            cellClasses.push(randomColorClass)
         }
 
         return {
             x,
             y,
             text: symbol,
-            classes
+            classes: cellClasses
         }
     })
 
-    const classes: string[] = []
+    const tableClasses: string[] = []
     if (tableConfig.animation === 'linear-horizontal') {
-        classes.push('table--animation-linear-horizontal')
-    }
-    else if (tableConfig.animation === 'linear-diagonal') {
-        classes.push('table--animation-linear-diagonal')
-    }
-    else if (tableConfig.animation === 'rotation') {
-        classes.push(`table--animation-rotation`)
+        tableClasses.push('table--animation-linear-horizontal')
+    } else if (tableConfig.animation === 'linear-diagonal') {
+        tableClasses.push('table--animation-linear-diagonal')
+    } else if (tableConfig.animation === 'rotation') {
+        tableClasses.push(`table--animation-rotation`)
     }
 
     return {
-        classes,
+        classes: tableClasses,
         width: tableConfig.width,
         height: tableConfig.height,
         expectedSequence: sequence.expectedSequence,

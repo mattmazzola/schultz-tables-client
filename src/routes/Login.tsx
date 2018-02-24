@@ -7,6 +7,7 @@ import { ReduxState } from '../types'
 import RSA from 'react-simple-auth'
 import { microsoftProvider } from '../providers/microsoft'
 import './Login.css'
+import { Dispatch } from 'redux';
 
 class Login extends React.Component<Props, {}> {
     async onClickLogin() {
@@ -27,7 +28,8 @@ class Login extends React.Component<Props, {}> {
         )
     }
 }
-const mapDispatchToProps = (dispatch: any) => {
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return bindActionCreators({
         login
     }, dispatch)

@@ -27,6 +27,7 @@ export const startScoreRejected = (reason: string): ActionObject =>
         reason
     })
 
+// tsling:disable-next-line
 export const startScoreThunkAsync = (): ThunkAction<any, any, any> => {
     return (dispatch) => {
         return fetch(`${baseUri}/api/scores/start`, {
@@ -75,6 +76,7 @@ export const addScoreRejected = (reason: string): ActionObject =>
         reason
     })
 
+// tsling:disable-next-line
 export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: models.IUser): ThunkAction<any, any, any> => {
     return (dispatch) => {
         return fetch(`${baseUri}/api/scores`, {
@@ -129,7 +131,8 @@ export const getScoresRejected = (reason: string): ActionObject =>
         type: AT.GET_SCORES_REJECTED,
         reason
     })
-
+    
+// tsling:disable-next-line
 export const getScoresThunkAsync = (tableTypeId: string): ThunkAction<any, any, any> => {
     return (dispatch) => {
         return fetch(`${baseUri}/api/scores?tableTypeId=${encodeURIComponent(tableTypeId)}`, {
@@ -180,6 +183,7 @@ export const getTableTypesRejected = (reason: string): ActionObject =>
         reason
     })
 
+// tsling:disable-next-line
 export const getTableTypesThunkAsync = (): ThunkAction<any, any, any> => {
     return (dispatch) => {
         return fetch(`${baseUri}/api/tableTypes`, {
@@ -225,6 +229,7 @@ export const getScoreDetailsRejected = (reason: string): ActionObject =>
         reason
     })
 
+// tsling:disable-next-line
 export const getScoreDetailsThunkAsync = (id: string): ThunkAction<Promise<models.IScoreDetails | void>, any, any> => {
     return (dispatch) => {
         return fetch(`${baseUri}/api/scores/${id}`, {

@@ -6,8 +6,8 @@ import RSA from 'react-simple-auth'
 
 const unauthenticatedState: UserState = {
     isLoggedIn: false,
-    id: "",
-    name: ""
+    id: '',
+    name: ''
 }
 
 const initialState = { ...unauthenticatedState }

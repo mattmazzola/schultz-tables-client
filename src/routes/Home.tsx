@@ -386,7 +386,8 @@ const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
     startScoreThunkAsync,
     addScoreThunkAsync
-  }, dispatch)
+  },
+  dispatch)
 }
 const mapStateToProps = (state: ReduxState) => {
   return {
