@@ -30,7 +30,7 @@ export const getUserScoresRejected = (reason: string): ActionObject =>
 
 export const getUserScoresThunkAsync = (tableTypeId: string, userId: string): ThunkAction<any, any, any> => {
     return (dispatch) => {
-        return fetch(`${baseUri}/api/scores?tableTypeId=${tableTypeId}&userId=${userId}`, {
+        return fetch(`${baseUri}/api/scores?tableTypeId=${encodeURIComponent(tableTypeId)}&userId=${encodeURIComponent(userId)}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',

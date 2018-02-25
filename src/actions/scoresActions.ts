@@ -141,7 +141,7 @@ export const getScoresRejected = (reason: string): ActionObject =>
 // tsling:disable-next-line
 export const getScoresThunkAsync = (tableTypeId: string): ThunkAction<any, any, any> => {
     return (dispatch) => {
-        return fetch(`${baseUri}/api/scores?tableTypeId=${encodeURIComponent(tableTypeId)}`, {
+        return fetch(`${baseUri}/api/scores?orderByDuration=true&tableTypeId=${encodeURIComponent(tableTypeId)}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
