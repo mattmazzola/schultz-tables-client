@@ -55,7 +55,8 @@ class Score extends React.Component<Props, State> {
         return (
             <div className="score">
                 <div className="score-preview" onClick={() => this.onClickScore(score)}>
-                    <span className="score-preview__time">{moment.duration(score.durationMilliseconds).asSeconds()}</span>
+                    <span className="score-preview__start-time">{moment(score.startTime).format('ll')}</span>
+                    <span className="score-preview__duration">{moment.duration(score.durationMilliseconds).asSeconds()}</span>
                     <span>{score.user ? score.user.name : 'Unknown'}</span>
                     <span className="score-preview__icon">
                         {this.state.isDetailsVisible

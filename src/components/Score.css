@@ -6,14 +6,20 @@
     white-space: nowrap;
     padding: 1em;
     display: grid;
-    grid-template-columns: min-content 1fr min-content;
+    grid-template-columns: min-content min-content 1fr min-content;
     grid-gap: 1em;
     cursor: pointer;
 }
 .score-preview__icon {
     line-height: 0;
 }
-.score-preview__time {
+
+.score-preview__start-time {
+    min-width: 10ch;
+    text-align: left;
+}
+
+.score-preview__duration {
     min-width: 6ch;
     text-align: right;
     font-weight: bold;
