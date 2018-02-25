@@ -74,12 +74,8 @@ export interface IScore {
     id: string
     userId: string
     user: IUser | undefined
-}
-
-export interface IScoreDetails {
-    id: string
-    startTime: Date
-    endTime: Date
+    startTime: string
+    endTime: string
     sequence: IUserSelection[]
     tableLayout: ITableLayout
     tableType: ITableType
@@ -132,11 +128,6 @@ export interface IScoreResponse {
 
 export interface IStartScoreResponse {
     value: string
-}
-
-export interface IDisplayScore {
-    preview: IScore
-    details: IScoreDetails
 }
 
 export interface ITableProperty {

@@ -12,7 +12,7 @@ import './ScoreDetails.css'
 
 interface ReceivedProps {
     durationMilliseconds: number
-    scoreDetails: models.IScoreDetails
+    scoreDetails: models.IScore
 }
 
 interface State {

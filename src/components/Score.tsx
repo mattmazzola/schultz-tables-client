@@ -14,7 +14,7 @@ interface ReceivedProps {
 }
 
 interface State {
-    scoreDetails: models.IScoreDetails | null
+    scoreDetails: models.IScore | null
     isDetailsVisible: boolean
     isDetailsLoading: boolean
 }
@@ -41,7 +41,7 @@ class Score extends React.Component<Props, State> {
         this.setState({
             isDetailsLoading: true
         })
-        const getScoreDetails: (id: string) => Promise<models.IScoreDetails> = this.props.getScoreDetailsThunkAsync as any
+        const getScoreDetails: (id: string) => Promise<models.IScore> = this.props.getScoreDetailsThunkAsync as any
         const scoreDetails = await getScoreDetails(score.id)
 
         this.setState({

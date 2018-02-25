@@ -98,13 +98,19 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
                 }
             })
             .then((scoreResponse: models.IScoreResponse) => {
-                const score: models.IScore = {
-                    durationMilliseconds: scoreResponse.durationMilliseconds,
-                    id: scoreResponse.id,
-                    userId: scoreResponse.userId,
-                    user
-                }
-                dispatch(addScoreFulfilled(scoreResponse.tableTypeId, score))
+                console.log(`Score Added: `, scoreResponse)
+                // const score: models.IScore = {
+                //     id: scoreResponse.id,
+                //     durationMilliseconds: scoreResponse.durationMilliseconds,
+                //     startTime: new Date(scoreResponse.startTime),
+                //     endTime: new Date(scoreResponse.endTime),
+                //     sequence: scoreResponse.sequence,
+                //     tableLayout: null,
+                //     tableType: null,
+                //     user,
+                //     userId: user.id
+                // }
+                // dispatch(addScoreFulfilled(scoreResponse.tableTypeId, score))
             })
             .catch(error => {
                 console.error(error)
@@ -217,7 +223,7 @@ export const getScoreDetailsAsync = (): ActionObject =>
         type: AT.GET_SCORE_DETAILS_ASYNC
     })
 
-export const getScoreDetailsFulfilled = (scoreDetails: models.IScoreDetails): ActionObject =>
+export const getScoreDetailsFulfilled = (scoreDetails: models.IScore): ActionObject =>
     ({
         type: AT.GET_SCORE_DETAILS_FULFILLED,
         scoreDetails
@@ -230,7 +236,7 @@ export const getScoreDetailsRejected = (reason: string): ActionObject =>
     })
 
 // tsling:disable-next-line
-export const getScoreDetailsThunkAsync = (id: string): ThunkAction<Promise<models.IScoreDetails | void>, any, any> => {
+export const getScoreDetailsThunkAsync = (id: string): ThunkAction<Promise<models.IScore | void>, any, any> => {
     return (dispatch) => {
         return fetch(`${baseUri}/api/scores/${id}`, {
             method: 'GET',
@@ -248,7 +254,7 @@ export const getScoreDetailsThunkAsync = (id: string): ThunkAction<Promise<model
                     throw new Error(JSON.stringify(json))
                 }
             })
-            .then((scoreDetails: models.IScoreDetails) => {
+            .then((scoreDetails: models.IScore) => {
                 dispatch(getScoreDetailsFulfilled(scoreDetails))
                 return scoreDetails
             })

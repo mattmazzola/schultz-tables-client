@@ -92,7 +92,7 @@ export interface GetScoreDetailsAsyncAction {
 
 export interface GetScoreDetailsFulfilledAction {
     type: AT.GET_SCORE_DETAILS_FULFILLED
-    scoreDetails: models.IScoreDetails
+    scoreDetails: models.IScore
 }
 
 export interface GetScoreDetailsRejectedAction {
