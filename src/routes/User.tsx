@@ -105,10 +105,7 @@ export class User extends React.Component<Props, State> {
                     : <select onChange={this.onChangeTableType} value={this.state.tableTypeIdSelected}>
                         {this.props.profile.tableTypes.map(tableType =>
                             <option key={tableType.id} value={tableType.id}>{tableType.width} x {tableType.height} - {tableType.properties
-                                .filter(({ key }) => {
-                                    console.log(key)
-                                    return ['symbols', 'fontColor', 'cellColor'].includes(key)
-                                })
+                                .filter(({ key }) => ['symbols', 'fontColor', 'cellColor'].includes(key))
                                 .map(({ value }) => `${value}`)
                                 .join(', ')}
                             </option>
