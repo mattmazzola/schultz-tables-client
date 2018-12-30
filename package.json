@@ -21,7 +21,7 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "deploy": "npm run build && surge -p ./build --domain https://schultztables.surge.sh"
+    "deploy": "npm run build && npx surge -p ./build --domain https://schultztables.surge.sh"
   },
   "devDependencies": {
     "@types/jest": "^22.0.1",
@@ -32,6 +32,7 @@
     "@types/react-router-dom": "^4.2.3",
     "@types/recharts": "^1.0.12",
     "@types/redux-auth-wrapper": "^2.0.6",
-    "@types/redux-thunk": "^2.1.0"
+    "@types/redux-thunk": "^2.1.0",
+    "surge": "^0.20.1"
   }
 }
