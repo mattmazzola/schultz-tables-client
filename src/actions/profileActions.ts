@@ -4,6 +4,7 @@ import * as models from '../types/models'
 import { ThunkAction } from 'redux-thunk'
 import { microsoftProvider } from '../providers/microsoft'
 import RSA from 'react-simple-auth'
+
 console.log(`REACT_APP_ENV: `, process.env.REACT_APP_ENV)
 const baseUri = process.env.REACT_APP_ENV === 'development'
     ? 'https://localhost:44311'
@@ -29,33 +30,33 @@ export const getUserScoresRejected = (reason: string): ActionObject =>
 })
 
 export const getUserScoresThunkAsync = (tableTypeId: string, userId: string): ThunkAction<any, any, any> => {
-    return (dispatch) => {
-        return fetch(`${baseUri}/api/scores?tableTypeId=${encodeURIComponent(tableTypeId)}&userId=${encodeURIComponent(userId)}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+    return async (dispatch) => {
+        try {
+            const response = await fetch(`${baseUri}/api/scores?tableTypeId=${encodeURIComponent(tableTypeId)}&userId=${encodeURIComponent(userId)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+                }
+            })
+
+            if (!response.ok) {
+                console.log(`status test: `, response.statusText)
+                const text = await response.text()
+                throw new Error(text)
             }
-        })
-            .then(response => {
-                const json = response.json()
-                if (response.ok) {
-                    return json
-                }
-                else {
-                    throw new Error(JSON.stringify(json))
-                }
+            
+            const json: models.IScoresResponse = await response.json()
+            json.scores.map(score => {
+                const user = json.users.find(u => u.id === score.userId)
+                score.user = user
             })
-            .then((scoresResponse: models.IScoresResponse) => {
-                scoresResponse.scores.map(score => {
-                    const user = scoresResponse.users.find(u => u.id === score.userId)
-                    score.user = user
-                })
-                dispatch(getUserScoresFulfilled(userId, tableTypeId, scoresResponse))
-            })
-            .catch(error => {
-                console.error(error)
-                dispatch(getUserScoresRejected(error))
-            })
+
+            dispatch(getUserScoresFulfilled(userId, tableTypeId, json))
+        }
+        catch (error) {
+            console.error(error)
+            dispatch(getUserScoresRejected(error))
+        }
     }
 }

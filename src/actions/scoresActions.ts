@@ -29,31 +29,22 @@ export const startScoreRejected = (reason: string): ActionObject =>
 
 // tsling:disable-next-line
 export const startScoreThunkAsync = (): ThunkAction<any, any, any> => {
-    return (dispatch) => {
-        return fetch(`${baseUri}/api/scores/start`, {
+    return async (dispatch) => {
+        const response = await fetch(`${baseUri}/api/scores/start`, {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
             },
         })
-            .then(response => {
-                const json = response.json()
-                if (response.ok) {
-                    return json
-                }
-                else {
-                    throw new Error(JSON.stringify(json))
-                }
-            })
-            .then((startScoreResponse: models.IStartScoreResponse) => {
-                dispatch(startScoreFulfilled(startScoreResponse.value))
-                return startScoreResponse.value
-            })
-            .catch(error => {
-                dispatch(getScoresRejected(error))
-                console.error(error)
-                throw new Error(error)
-            })
+
+        const responseJson: models.IStartScoreResponse = await response.json()
+        if (!response.ok) {
+            const error = JSON.stringify(responseJson, null, '  ')
+            dispatch(startScoreRejected(error))
+            throw new Error(error)
+        }
+
+        dispatch(startScoreFulfilled(responseJson.value))
     }
 }
 
@@ -78,44 +69,43 @@ export const addScoreRejected = (reason: string): ActionObject =>
 
 // tsling:disable-next-line
 export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: models.IUser): ThunkAction<any, any, any> => {
-    return (dispatch) => {
-        return fetch(`${baseUri}/api/scores`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
-            },
-            body: JSON.stringify(scoreRequest)
-        })
-            .then(response => {
-                const json = response.json()
-                if (response.ok) {
-                    return json
-                }
-                else {
-                    throw new Error(JSON.stringify(json))
-                }
-            })
-            .then((scoreResponse: models.IScoreResponse) => {
-                console.log(`Score Added: `, scoreResponse)
-                // const score: models.IScore = {
-                //     id: scoreResponse.id,
-                //     durationMilliseconds: scoreResponse.durationMilliseconds,
-                //     startTime: new Date(scoreResponse.startTime),
-                //     endTime: new Date(scoreResponse.endTime),
-                //     sequence: scoreResponse.sequence,
-                //     tableLayout: null,
-                //     tableType: null,
-                //     user,
-                //     userId: user.id
-                // }
-                // dispatch(addScoreFulfilled(scoreResponse.tableTypeId, score))
-            })
-            .catch(error => {
-                console.error(error)
-                dispatch(addScoreRejected(error))
-            })
+    return async (dispatch) => {
+        try {
+            const response = await fetch(`${baseUri}/api/scores`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+                },
+                body: JSON.stringify(scoreRequest)
+            });
+
+            if (!response.ok) {
+                console.log(`status test: `, response.statusText)
+                const text = await response.text()
+                throw new Error(text)
+            }
+            const json = await response.json();
+            const score: models.IScore = json;
+            console.log(`Score Added: `, score);
+            // const score: models.IScore = {
+            //     id: scoreResponse.id,
+            //     durationMilliseconds: scoreResponse.durationMilliseconds,
+            //     startTime: new Date(scoreResponse.startTime),
+            //     endTime: new Date(scoreResponse.endTime),
+            //     sequence: scoreResponse.sequence,
+            //     tableLayout: null,
+            //     tableType: null,
+            //     user,
+            //     userId: user.id
+            // }
+            dispatch(addScoreFulfilled(score.tableType.id, score));
+        }
+        catch (error) {
+            console.error(error);
+            dispatch(addScoreRejected(error));
+        }
     }
 }
 
@@ -140,34 +130,34 @@ export const getScoresRejected = (reason: string): ActionObject =>
     
 // tsling:disable-next-line
 export const getScoresThunkAsync = (tableTypeId: string): ThunkAction<any, any, any> => {
-    return (dispatch) => {
-        return fetch(`${baseUri}/api/scores?orderByDuration=true&tableTypeId=${encodeURIComponent(tableTypeId)}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+    return async (dispatch) => {
+        try {
+            const response = await fetch(`${baseUri}/api/scores?orderByDuration=true&tableTypeId=${encodeURIComponent(tableTypeId)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+                }
+            });
+
+            if (!response.ok) {
+                console.log(`status test: `, response.statusText)
+                const text = await response.text()
+                throw new Error(text)
             }
-        })
-            .then(response => {
-                const json = response.json()
-                if (response.ok) {
-                    return json
-                }
-                else {
-                    throw new Error(JSON.stringify(json))
-                }
-            })
-            .then((scoresResponse: models.IScoresResponse) => {
-                scoresResponse.scores.forEach(score => {
-                    const user = scoresResponse.users.find(u => u.id === score.userId)
-                    score.user = user
-                })
-                dispatch(getScoresFulfilled(tableTypeId, scoresResponse))
-            })
-            .catch(error => {
-                console.error(error)
-                dispatch(getScoresRejected(error))
-            })
+
+            const json = await response.json();
+            const scoresResponse: models.IScoresResponse = json;
+            scoresResponse.scores.forEach(score => {
+                const user = scoresResponse.users.find(u => u.id === score.userId);
+                score.user = user;
+            });
+            dispatch(getScoresFulfilled(tableTypeId, scoresResponse));
+        }
+        catch (error) {
+            console.error(error);
+            dispatch(getScoresRejected(error));
+        }
     }
 }
 

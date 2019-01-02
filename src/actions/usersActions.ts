@@ -28,29 +28,29 @@ export const getUsersRejected = (reason: string): ActionObject =>
     })
 
 export const getUsersThunkAsync = (): ThunkAction<any, any, any> => {
-    return (dispatch) => {
-        fetch(`${baseUri}/api/users`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+    return async (dispatch) => {
+        try {
+            const response = await fetch(`${baseUri}/api/users`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+                }
+            });
+
+            if (!response.ok) {
+                console.log(`status test: `, response.statusText)
+                const text = await response.text()
+                throw new Error(text)
             }
-        })
-            .then(response => {
-                const json = response.json()
-                if(response.ok) {
-                    return json
-                }
-                else {
-                    throw new Error(JSON.stringify(json))
-                }
-            })
-            .then((users: models.IUser[]) => {
-                dispatch(getUsersFulfilled(users))
-            })
-            .catch(error => {
-                console.error(error)
-                dispatch(getUsersRejected(error))
-            })
+
+            const json = await response.json();
+            const users: models.IUser[] = json;
+            dispatch(getUsersFulfilled(users));
+        }
+        catch (error) {
+            console.error(error);
+            dispatch(getUsersRejected(error));
+        }
     }
 }
