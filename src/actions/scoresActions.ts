@@ -5,7 +5,7 @@ import { ThunkAction } from 'redux-thunk'
 import { microsoftProvider } from '../providers/microsoft'
 import RSA from 'react-simple-auth'
 const baseUri = process.env.REACT_APP_ENV === 'development'
-    ? 'https://localhost:44311'
+    ? 'http://localhost:4000'
     : 'https://schultztables.azurewebsites.net'
     
 console.log(`using baseUri: `, baseUri)
@@ -30,20 +30,36 @@ export const startScoreRejected = (reason: string): ActionObject =>
 // tsling:disable-next-line
 export const startScoreThunkAsync = (): ThunkAction<any, any, any> => {
     return async (dispatch) => {
-        const response = await fetch(`${baseUri}/api/scores/start`, {
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+        const response = await fetch(baseUri, {
+            "credentials": "omit",
+            "headers": {
+                "accept": "*/*",
+                "accept-language": "en-US,en;q=0.9,ko;q=0.8",
+                "cache-control": "no-cache",
+                "content-type": "application/json",
+                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`,
             },
+            "body": JSON.stringify({
+                operationName: "start",
+                variables:{},
+                query: `mutation start {
+                    start (ignored: "") {
+                        value
+                    }
+                }`
+            }),
+            "method": "POST",
+            "mode": "cors"
         })
 
-        const responseJson: models.IStartScoreResponse = await response.json()
         if (!response.ok) {
-            const error = JSON.stringify(responseJson, null, '  ')
+            const test = await response.text()
+            const error = JSON.stringify(`${response.statusText} ${test}`, null, '  ')
             dispatch(startScoreRejected(error))
             throw new Error(error)
         }
-
+        
+        const responseJson: models.IStartScoreResponse = await response.json()
         dispatch(startScoreFulfilled(responseJson.value))
     }
 }

@@ -7,7 +7,7 @@ import RSA from 'react-simple-auth'
 
 console.log(`REACT_APP_ENV: `, process.env.REACT_APP_ENV)
 const baseUri = process.env.REACT_APP_ENV === 'development'
-    ? 'https://localhost:44311'
+    ? 'http://localhost:4000/'
     : 'https://schultztables.azurewebsites.net'
     
 export const getUserScoresAsync = (): ActionObject =>
@@ -32,12 +32,28 @@ export const getUserScoresRejected = (reason: string): ActionObject =>
 export const getUserScoresThunkAsync = (tableTypeId: string, userId: string): ThunkAction<any, any, any> => {
     return async (dispatch) => {
         try {
-            const response = await fetch(`${baseUri}/api/scores?tableTypeId=${encodeURIComponent(tableTypeId)}&userId=${encodeURIComponent(userId)}`, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
-                }
+            const response = await fetch(baseUri, {
+                "credentials": "omit",
+                "headers": {
+                    "accept": "*/*",
+                    "accept-language": "en-US,en;q=0.9,ko;q=0.8",
+                    "cache-control": "no-cache",
+                    "content-type": "application/json",
+                    'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`,
+                    "pragma": "no-cache",
+                    "sec-metadata": "destination=\"\", site=same-origin"
+                },
+                "body": JSON.stringify({
+                    operationName: "start",
+                    variables:{},
+                    query: `mutation start {
+                        start (ignored: "") {
+                            valu
+                        }
+                    }`
+                }),
+                "method": "POST",
+                "mode": "cors"
             })
 
             if (!response.ok) {
@@ -45,7 +61,7 @@ export const getUserScoresThunkAsync = (tableTypeId: string, userId: string): Th
                 const text = await response.text()
                 throw new Error(text)
             }
-            
+
             const json: models.IScoresResponse = await response.json()
             json.scores.map(score => {
                 const user = json.users.find(u => u.id === score.userId)
