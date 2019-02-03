@@ -29,15 +29,24 @@ export const getUserScoresThunkAsync = (tableTypeId: string, user: models.IUser)
             const response = await makeGraphqlRequest(
                 null,
                 `{
-                    userScores(userId:"76440ce3-e323-4243-9e70-13a3cdbfb172"){
+                    userScores(userId: "${tableTypeId}"){
                       id
+                      startTime
+                      endTime
                       userId
                       duration
+                      durationMilliseconds
                       sequence {
                         correct
+                        cell {
+                            text
+                            x
+                            y
+                        }
                         time
                       }
                       tableTypeId
+                      tableLayoutId
                     }
                   }`)
 
@@ -48,6 +57,10 @@ export const getUserScoresThunkAsync = (tableTypeId: string, user: models.IUser)
             }
 
             const json: models.IGraphQlResponse<{ userScores: models.IScore[] }> = await response.json()
+            if (json.errors && json.errors.length >= 1) {
+                throw new Error(json.errors[0].message)
+            }
+
             console.log({ userScores: json })
             const scores: models.IScore[] = json.data.userScores
             scores.forEach(score => {

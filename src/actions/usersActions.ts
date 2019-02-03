@@ -55,6 +55,10 @@ export const getUsersThunkAsync = (): ThunkAction<any, any, any> => {
             }
 
             const json: models.IGraphQlResponse<{ users: models.IUser[] }> = await response.json();
+            if (json.errors && json.errors.length >= 1) {
+                throw new Error(json.errors[0].message)
+            }
+
             const users = json.data.users
             dispatch(getUsersFulfilled(users));
         }

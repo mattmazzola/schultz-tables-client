@@ -58,9 +58,15 @@ export interface IOption<T> {
     value: T
 }
 
-
+export interface IMongoError {
+    extensions: any
+    locations: any
+    message: string
+    path: string[]
+}
 export interface IGraphQlResponse<T> {
     data: T
+    errors: IMongoError[]
 }
 
 export interface IUser {

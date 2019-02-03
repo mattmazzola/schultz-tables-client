@@ -2,7 +2,7 @@ import * as models from './models'
 
 export interface ScoresState {
     tableTypes: models.ITableType[]
-    scoresByType: Map<string, models.IScoresResponse>
+    scoresByType: { [x: string]: models.IScoresResponse }
 }
 
 export type UsersState = models.IUser[]

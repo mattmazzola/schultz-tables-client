@@ -2,8 +2,6 @@ import { ActionObject } from '../types'
 import { AT } from '../types/ActionTypes'
 import * as models from '../types/models'
 import { ThunkAction } from 'redux-thunk'
-import { microsoftProvider } from '../providers/microsoft'
-import RSA from 'react-simple-auth'
 import { makeGraphqlRequest, makeGraphqlMutation } from '../services/graphql'
 import * as utilities from '../services/utilities'
 
@@ -48,8 +46,12 @@ export const startScoreThunkAsync = (): ThunkAction<any, any, any> => {
             throw new Error(text)
         }
 
-        const responseJson: models.IStartScoreResponse = await response.json()
-        const signedStartTime: string = responseJson.data.start.value
+        const json: models.IGraphQlResponse<{ start: models.IStartScoreResponse }> = await response.json()
+        if (json.errors && json.errors.length >= 1) {
+            throw new Error(json.errors[0].message)
+        }
+
+        const signedStartTime: string = json.data.start.value
         dispatch(startScoreFulfilled(signedStartTime))
         return signedStartTime
     }
@@ -79,7 +81,15 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
     return async (dispatch) => {
         try {
             const graphModel = utilities.convertScoreRequstToGraphql(scoreRequest)
-            // tableProperties: ${JSON.stringify(graphModel.tableProperties)}
+            console.log({ tableProperties: graphModel.tableProperties })
+            let tableProperties = JSON.stringify(graphModel.tableProperties)
+            tableProperties = tableProperties.replace(/\"([^(\")"]+)\":/g,"$1:")
+            console.log({ tableProperties })
+
+            console.log({ userSequence: graphModel.userSequence })
+            let userSequence = JSON.stringify(graphModel.userSequence)
+            userSequence = userSequence.replace(/\"([^(\")"]+)\":/g,"$1:")
+            console.log({ userSequence })
 
             const response = await makeGraphqlMutation(
                 "AddScore",
@@ -91,31 +101,20 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
                         endTime: ${graphModel.endTime},
                         expectedSequence: ${JSON.stringify(graphModel.expectedSequence)}
                         randomizedSequence: ${JSON.stringify(graphModel.randomizedSequence)},
-                        userSequence: [
-                            {
-                                time: ${123},
-                                cell: {
-                                    text: "A",
-                                    x: 1,
-                                    y: 2
-                                }
-                                correct: true
-                            }
-                        ],
+                        userSequence: ${userSequence},
                         tableWidth: ${graphModel.tableWidth},
                         tableHeight: ${graphModel.tableWidth},
-                        tableProperties: [
-                            { key: "test", value:"testValue" },
-                            { key: "tes2t", value:"testValue" }
-                        ]
+                        tableProperties: ${tableProperties}
                     }) {
                         id
                         startTime
                         endTime
                         duration
+                        durationMilliseconds
                         sequence {
                             time
                             cell {
+                                classes
                                 text
                                 x
                                 y
@@ -133,23 +132,13 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
                 const text = await response.text()
                 throw new Error(text)
             }
-            const json = await response.json();
-            if (json.errors) {
 
+            const json: models.IGraphQlResponse<{ addScore: models.IScoreGraphql }> = await response.json();
+            if (json.errors && json.errors.length >= 1) {
+                throw new Error(json.errors[0].message)
             }
-            const score: models.IScoreGraphql = json.data.addScore;
-            console.log(`Score Added: `, score);
-            // const score: models.IScore = {
-            //     id: scoreResponse.id,
-            //     durationMilliseconds: scoreResponse.durationMilliseconds,
-            //     startTime: new Date(scoreResponse.startTime),
-            //     endTime: new Date(scoreResponse.endTime),
-            //     sequence: scoreResponse.sequence,
-            //     tableLayout: null,
-            //     tableType: null,
-            //     user,
-            //     userId: user.id
-            // }
+
+            const score = json.data.addScore;
             dispatch(addScoreFulfilled(score.tableTypeId, score));
         }
         catch (error) {
@@ -196,6 +185,8 @@ export const getScoresThunkAsync = (tableTypeId: string): ThunkAction<any, any, 
                         userId
                         startTime
                         endTime
+                        duration
+                        durationMilliseconds
                         sequence {
                           cell {
                             x
@@ -218,6 +209,10 @@ export const getScoresThunkAsync = (tableTypeId: string): ThunkAction<any, any, 
             }
 
             const json: models.IGraphQlResponse<{ scores: models.IScoresResponse }> = await response.json();
+            if (json.errors && json.errors.length >= 1) {
+                throw new Error(json.errors[0].message)
+            }
+
             json.data.scores.scores.forEach(score => {
                 const user = json.data.scores.users.find(u => u.id === score.userId);
                 score.user = user;
@@ -273,10 +268,13 @@ export const getTableTypesThunkAsync = (): ThunkAction<any, any, any> => {
             throw new Error(text)
         }
 
-        const tableTypes: models.IGraphQlResponse<{ tableTypes: models.ITableType[] }> = await response.json()
+        const json: models.IGraphQlResponse<{ tableTypes: models.ITableType[] }> = await response.json()
+        if (json.errors && json.errors.length >= 1) {
+            throw new Error(json.errors[0].message)
+        }
 
-        dispatch(getTableTypesFulfilled(tableTypes.data.tableTypes))
-        return tableTypes.data.tableTypes
+        dispatch(getTableTypesFulfilled(json.data.tableTypes))
+        return json.data.tableTypes
     }
 }
 
@@ -299,31 +297,63 @@ export const getScoreDetailsRejected = (reason: string): ActionObject =>
 
 // tsling:disable-next-line
 export const getScoreDetailsThunkAsync = (id: string): ThunkAction<Promise<models.IScore | void>, any, any> => {
-    return (dispatch) => {
-        return fetch(`${baseUri}/api/scores/${id}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+    return async (dispatch) => {
+        try {
+            const response = await makeGraphqlRequest(
+                null,
+                `{
+                    score(id: "${id}") {
+                      id
+                      userId
+                      startTime
+                      endTime
+                      duration
+                      durationMilliseconds
+                      sequence {
+                        cell {
+                          classes
+                          x
+                          y
+                          text
+                        }
+                        time
+                        correct
+                      }
+                      tableType {
+                        id
+                        width
+                        height
+                        properties {
+                          key
+                          value
+                        }
+                      }
+                      tableLayout {
+                        id
+                        width
+                        height
+                        expectedSequence
+                        randomizedSequence
+                      }
+                    }
+                  }`)
+
+            if (!response.ok) {
+                const text = await response.text()
+                throw new Error(text)
             }
-        })
-            .then(response => {
-                const json = response.json()
-                if (response.ok) {
-                    return json
-                }
-                else {
-                    throw new Error(JSON.stringify(json))
-                }
-            })
-            .then((scoreDetails: models.IScore) => {
-                dispatch(getScoreDetailsFulfilled(scoreDetails))
-                return scoreDetails
-            })
-            .catch(error => {
-                console.error(error)
-                dispatch(getScoreDetailsRejected(error))
-                return error
-            })
+            const json = await response.json()
+            if (json.errors && json.errors.length >= 1) {
+                throw new Error(json.errors[0].message)
+            }
+            const scoreDetails = json
+            dispatch(getScoreDetailsFulfilled(scoreDetails));
+            return scoreDetails
+        }
+        catch (error) {
+            console.error(error);
+            dispatch(getScoreDetailsRejected(error));
+            return error;
+        }
     }
 }
