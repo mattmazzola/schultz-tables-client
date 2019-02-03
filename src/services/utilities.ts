@@ -50,13 +50,13 @@ export const getSymbols = (type: string, length: number) => {
                 throw new Error(`You attempted to get ${length} symbols for ${type} but there are only ${availableLetters.length} available`)
             }
 
-            return availableLetters.filter((_,i) => i < length)
+            return availableLetters.filter((_, i) => i < length)
         }
         case 'numbersAndLetters': {
             const numLetters = Math.min(Math.ceil(length / 2), availableLetters.length)
             const numNumbers = length - numLetters
-            
-            const letters = availableLetters.filter((_,i) => i < numLetters)
+
+            const letters = availableLetters.filter((_, i) => i < numLetters)
             const numbers = Array(numNumbers).fill(0).map((_, i) => i + 1).map(x => x.toString())
 
             return [...letters, ...numbers]
@@ -71,7 +71,7 @@ export const generateSymbols = (tableConfig: models.ITableConfig): models.ISeque
     const length = tableConfig.width * tableConfig.height
     const symbols = getSymbols(tableConfig.symbols, length)
     const randomSymbols = randomize(symbols)
-    
+
     return {
         expectedSequence: symbols,
         randomizedSequence: randomSymbols
@@ -89,7 +89,7 @@ export const generateTable = (tableConfig: models.ITableConfig, sequence: models
         if (tableConfig.textEffect === 'shadow') {
             cellClasses.push('cell--text-effect-shadow')
         }
-        
+
         if (tableConfig.cellColor === 'rainbow') {
             const randomColorClass = rainbowClasses[Math.floor(Math.random() * rainbowClasses.length)]
             cellClasses.push(randomColorClass)
@@ -138,3 +138,14 @@ export const getTimeDifference = (timeA: string, timeB: string) =>
 
 export const getUserTableTypeKey = (userId: string, tableTypeId: string) =>
     `${userId}_${tableTypeId}`
+
+export const convertScoreRequstToGraphql = (scoreRequest: models.IScoreRequest): models.IScoreRequestGraphql => {
+    const { startTime, endTime, userSequence, duration, ...scoreGraphql } = scoreRequest
+
+    return {
+        ...scoreGraphql,
+        userSequence: userSequence.map(answer => ({ ...answer, time: answer.time.getTime() })),
+        startTime: startTime.getTime(),
+        endTime: endTime.getTime()
+    }
+}

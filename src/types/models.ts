@@ -21,9 +21,9 @@ export interface ICell {
     classes: string[]
 }
 
-export interface IUserSelection {
+export interface IUserSelection<T = Date> {
     correct: boolean
-    time: Date
+    time: T
     cell: ICell
 }
 
@@ -81,6 +81,11 @@ export interface IScore {
     tableType: ITableType
 }
 
+export interface IScoreGraphql extends IScore {
+    tableLayoutId: string
+    tableTypeId: string
+}
+
 export interface ITableLayout {
     id: string
     height: number
@@ -126,8 +131,26 @@ export interface IScoreResponse {
     userId: string
 }
 
+export interface IScoreRequestGraphql {
+    // duration: number
+    endTime: number
+    expectedSequence: string[]
+    randomizedSequence: string[]
+    signedStartTime: string
+    startTime: number
+    tableHeight: number
+    tableWidth: number
+    tableProperties: KVPair<string, string>[]
+    userSequence: IUserSelection<number>[]
+}
+
 export interface IStartScoreResponse {
     value: string
+    data: {
+        start: {
+            value: string
+        }
+    }
 }
 
 export interface ITableProperty {

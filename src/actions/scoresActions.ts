@@ -4,6 +4,9 @@ import * as models from '../types/models'
 import { ThunkAction } from 'redux-thunk'
 import { microsoftProvider } from '../providers/microsoft'
 import RSA from 'react-simple-auth'
+import { makeGraphqlRequest, makeGraphqlMutation } from '../services/graphql'
+import * as utilities from '../services/utilities'
+
 const baseUri = process.env.REACT_APP_ENV === 'development'
     ? 'http://localhost:4000'
     : 'https://schultztables.azurewebsites.net'
@@ -30,27 +33,13 @@ export const startScoreRejected = (reason: string): ActionObject =>
 // tsling:disable-next-line
 export const startScoreThunkAsync = (): ThunkAction<any, any, any> => {
     return async (dispatch) => {
-        const response = await fetch(baseUri, {
-            "credentials": "omit",
-            "headers": {
-                "accept": "*/*",
-                "accept-language": "en-US,en;q=0.9,ko;q=0.8",
-                "cache-control": "no-cache",
-                "content-type": "application/json",
-                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`,
-            },
-            "body": JSON.stringify({
-                operationName: "start",
-                variables:{},
-                query: `mutation start {
-                    start (ignored: "") {
-                        value
-                    }
-                }`
-            }),
-            "method": "POST",
-            "mode": "cors"
-        })
+        const response = await makeGraphqlRequest(
+            "start",
+            `mutation start {
+                start (ignored: "") {
+                    value
+                }
+            }`)
 
         if (!response.ok) {
             const test = await response.text()
@@ -60,7 +49,9 @@ export const startScoreThunkAsync = (): ThunkAction<any, any, any> => {
         }
         
         const responseJson: models.IStartScoreResponse = await response.json()
-        dispatch(startScoreFulfilled(responseJson.value))
+        const signedStartTime: string = responseJson.data.start.value
+        dispatch(startScoreFulfilled(signedStartTime))
+        return signedStartTime
     }
 }
 
@@ -87,15 +78,55 @@ export const addScoreRejected = (reason: string): ActionObject =>
 export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: models.IUser): ThunkAction<any, any, any> => {
     return async (dispatch) => {
         try {
-            const response = await fetch(`${baseUri}/api/scores`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
-                },
-                body: JSON.stringify(scoreRequest)
-            });
+            const graphModel = utilities.convertScoreRequstToGraphql(scoreRequest)
+            // tableProperties: ${JSON.stringify(graphModel.tableProperties)}
+
+            const response = await makeGraphqlMutation(
+                "AddScore",
+                `mutation AddScore {
+                    addScore (scoreInput: {
+                        signedStartTime: "${graphModel.signedStartTime}",
+                        userId: "${user.id}",
+                        startTime: ${graphModel.startTime},
+                        endTime: ${graphModel.endTime},
+                        expectedSequence: ${JSON.stringify(graphModel.expectedSequence)}
+                        randomizedSequence: ${JSON.stringify(graphModel.randomizedSequence)},
+                        userSequence: [
+                            {
+                                time: ${123},
+                                cell: {
+                                    text: "A",
+                                    x: 1,
+                                    y: 2
+                                }
+                                correct: true
+                            }
+                        ],
+                        tableWidth: ${graphModel.tableWidth},
+                        tableHeight: ${graphModel.tableWidth},
+                        tableProperties: [
+                            { key: "test", value:"testValue" },
+                            { key: "tes2t", value:"testValue" }
+                        ]
+                    }) {
+                        id
+                        startTime
+                        endTime
+                        duration
+                        sequence {
+                            time
+                            cell {
+                                text
+                                x
+                                y
+                            }
+                            correct
+                        }
+                        tableTypeId
+                        tableLayoutId
+                    }
+                }
+            `)
 
             if (!response.ok) {
                 console.log(`status test: `, response.statusText)
@@ -103,7 +134,7 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
                 throw new Error(text)
             }
             const json = await response.json();
-            const score: models.IScore = json;
+            const score: models.IScoreGraphql = json.data.addScore;
             console.log(`Score Added: `, score);
             // const score: models.IScore = {
             //     id: scoreResponse.id,
@@ -116,7 +147,7 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
             //     user,
             //     userId: user.id
             // }
-            dispatch(addScoreFulfilled(score.tableType.id, score));
+            dispatch(addScoreFulfilled(score.tableTypeId, score));
         }
         catch (error) {
             console.error(error);
