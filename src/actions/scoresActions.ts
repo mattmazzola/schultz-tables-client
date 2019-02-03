@@ -81,15 +81,11 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
     return async (dispatch) => {
         try {
             const graphModel = utilities.convertScoreRequstToGraphql(scoreRequest)
-            console.log({ tableProperties: graphModel.tableProperties })
             let tableProperties = JSON.stringify(graphModel.tableProperties)
             tableProperties = tableProperties.replace(/\"([^(\")"]+)\":/g,"$1:")
-            console.log({ tableProperties })
 
-            console.log({ userSequence: graphModel.userSequence })
             let userSequence = JSON.stringify(graphModel.userSequence)
             userSequence = userSequence.replace(/\"([^(\")"]+)\":/g,"$1:")
-            console.log({ userSequence })
 
             const response = await makeGraphqlMutation(
                 "AddScore",
