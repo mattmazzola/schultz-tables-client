@@ -58,6 +58,11 @@ export interface IOption<T> {
     value: T
 }
 
+
+export interface IGraphQlResponse<T> {
+    data: T
+}
+
 export interface IUser {
     name: string
     id: string

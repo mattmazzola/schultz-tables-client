@@ -2,8 +2,8 @@ import { ActionObject } from '../types'
 import { AT } from '../types/ActionTypes'
 import * as models from '../types/models'
 import { ThunkAction } from 'redux-thunk'
-import { microsoftProvider } from '../providers/microsoft'
-import RSA from 'react-simple-auth'
+import { makeGraphqlRequest } from '../services/graphql'
+
 const baseUri = process.env.REACT_APP_ENV === 'development'
     ? 'https://localhost:44311'
     : 'https://schultztables.azurewebsites.net'
@@ -30,13 +30,23 @@ export const getUsersRejected = (reason: string): ActionObject =>
 export const getUsersThunkAsync = (): ThunkAction<any, any, any> => {
     return async (dispatch) => {
         try {
-            const response = await fetch(`${baseUri}/api/users`, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
-                }
-            });
+            // const response = await fetch(`${baseUri}/api/users`, {
+            //     method: 'GET',
+            //     headers: {
+            //         'Accept': 'application/json',
+            //         'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
+            //     }
+            // });
+
+            const response = await makeGraphqlRequest(
+                null,
+                `{
+                    users {
+                        id
+                        email
+                        name
+                    }
+                }`)
 
             if (!response.ok) {
                 console.log(`status test: `, response.statusText)
@@ -44,8 +54,8 @@ export const getUsersThunkAsync = (): ThunkAction<any, any, any> => {
                 throw new Error(text)
             }
 
-            const json = await response.json();
-            const users: models.IUser[] = json;
+            const json: models.IGraphQlResponse<{ users: models.IUser[] }> = await response.json();
+            const users = json.data.users
             dispatch(getUsersFulfilled(users));
         }
         catch (error) {

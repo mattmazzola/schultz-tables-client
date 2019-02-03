@@ -1,7 +1,7 @@
 import RSA from 'react-simple-auth'
 import { microsoftProvider } from '../providers/microsoft'
 
-export const makeGraphqlRequest = async (operationName: string, query: string) => {
+export const makeGraphqlRequest = async (operationName: string | null, query: string) => {
     return await fetch(`http://localhost:4000`, {
         "credentials": "omit",
         "headers": {
