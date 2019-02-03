@@ -48,7 +48,7 @@ export const getUserScoresThunkAsync = (tableTypeId: string, userId: string): Th
                     variables:{},
                     query: `mutation start {
                         start (ignored: "") {
-                            valu
+                            value
                         }
                     }`
                 }),
@@ -63,7 +63,8 @@ export const getUserScoresThunkAsync = (tableTypeId: string, userId: string): Th
             }
 
             const json: models.IScoresResponse = await response.json()
-            json.scores.map(score => {
+            console.log({ userScores: json })
+            json.scores.forEach(score => {
                 const user = json.users.find(u => u.id === score.userId)
                 score.user = user
             })

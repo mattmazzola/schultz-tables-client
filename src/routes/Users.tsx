@@ -40,7 +40,7 @@ class Users extends React.Component<Props, State> {
       <div className="users">
         {this.state.isLoading
           ? <div className="user">Loading...</div>
-          : this.props.users.map((user, i) =>
+          : this.props.users.map((user) =>
             <NavLink to={{ pathname: `/users/${user.id}`, state: { user } }} exact={true} className="user" key={user.id}>
               <span><i className="icon-person material-icons">person</i></span>
               <span>{user.name}</span>

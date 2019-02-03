@@ -10,7 +10,7 @@ import * as utilities from '../services/utilities'
 const baseUri = process.env.REACT_APP_ENV === 'development'
     ? 'http://localhost:4000'
     : 'https://schultztables.azurewebsites.net'
-    
+
 console.log(`using baseUri: `, baseUri)
 
 export const startScoreAsync = (): ActionObject =>
@@ -42,12 +42,12 @@ export const startScoreThunkAsync = (): ThunkAction<any, any, any> => {
             }`)
 
         if (!response.ok) {
-            const test = await response.text()
-            const error = JSON.stringify(`${response.statusText} ${test}`, null, '  ')
-            dispatch(startScoreRejected(error))
-            throw new Error(error)
+            console.log(`status test: `, response.statusText)
+            const text = await response.text()
+            dispatch(startScoreRejected(text))
+            throw new Error(text)
         }
-        
+
         const responseJson: models.IStartScoreResponse = await response.json()
         const signedStartTime: string = responseJson.data.start.value
         dispatch(startScoreFulfilled(signedStartTime))
@@ -134,6 +134,9 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
                 throw new Error(text)
             }
             const json = await response.json();
+            if (json.errors) {
+                
+            }
             const score: models.IScoreGraphql = json.data.addScore;
             console.log(`Score Added: `, score);
             // const score: models.IScore = {
@@ -174,7 +177,7 @@ export const getScoresRejected = (reason: string): ActionObject =>
         type: AT.GET_SCORES_REJECTED,
         reason
     })
-    
+
 // tsling:disable-next-line
 export const getScoresThunkAsync = (tableTypeId: string): ThunkAction<any, any, any> => {
     return async (dispatch) => {
@@ -228,30 +231,32 @@ export const getTableTypesRejected = (reason: string): ActionObject =>
 
 // tsling:disable-next-line
 export const getTableTypesThunkAsync = (): ThunkAction<any, any, any> => {
-    return (dispatch) => {
-        return fetch(`${baseUri}/api/tableTypes`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
-            }
-        })
-            .then(response => {
-                const json = response.json()
-                if (response.ok) {
-                    return json
+    return async (dispatch: any) => {
+
+        const response = await makeGraphqlRequest(
+            null,
+            `{
+                tableTypes {
+                    id
+                    width
+                    height
+                    properties {
+                        key
+                        value
+                    }
                 }
-                else {
-                    throw new Error(JSON.stringify(json))
-                }
-            })
-            .then((tableTypes: models.ITableType[]) => {
-                dispatch(getTableTypesFulfilled(tableTypes))
-            })
-            .catch(error => {
-                console.error(error)
-                dispatch(getTableTypesRejected(error))
-            })
+            }`)
+
+        if (!response.ok) {
+            console.log(`status test: `, response.statusText)
+            const text = await response.text()
+            throw new Error(text)
+        }
+
+        const tableTypes: models.IGraphQlResponse<{ tableTypes: models.ITableType[] }> = await response.json()
+
+        dispatch(getTableTypesFulfilled(tableTypes.data.tableTypes))
+        return tableTypes.data.tableTypes
     }
 }
 
