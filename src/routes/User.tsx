@@ -70,8 +70,8 @@ export class User extends React.Component<Props, State> {
                 isLoading: false
             })
 
-            if (!this.props.profile.scoresByUserAndType.get(tableTypeIdSelected)) {
-                this.props.getUserScoresThunkAsync(tableTypeIdSelected, this.props.user.id)
+            if (!this.props.profile.scoresByUserAndType[tableTypeIdSelected] && user) {
+                this.props.getUserScoresThunkAsync(tableTypeIdSelected, user)
             }
         }
     }
@@ -79,10 +79,10 @@ export class User extends React.Component<Props, State> {
     onChangeTableType = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const tableTypeIdSelected = event.target.value
 
-        const key = getUserTableTypeKey(this.props.user.id, tableTypeIdSelected)
-        const existingUserScores = this.props.profile.scoresByUserAndType.get(key)
-        if (!existingUserScores || existingUserScores.scores.length === 0) {
-            this.props.getUserScoresThunkAsync(tableTypeIdSelected, this.props.user.id)
+        const key = getUserTableTypeKey(this.state.user.id, tableTypeIdSelected)
+        const existingUserScores = this.props.profile.scoresByUserAndType[key]
+        if (!existingUserScores || existingUserScores.length === 0) {
+            this.props.getUserScoresThunkAsync(tableTypeIdSelected, this.state.user)
         }
 
         this.setState({
@@ -98,8 +98,9 @@ export class User extends React.Component<Props, State> {
         const { user } = this.state
         const { user: loggedInUser, profile } = this.props
         const userTableKey = getUserTableTypeKey(user.id, this.state.tableTypeIdSelected)
-        const hasScores = profile.scoresByUserAndType.has(userTableKey)
-        const scoresResponse = profile.scoresByUserAndType.get(userTableKey)
+        const hasScores = profile.scoresByUserAndType[userTableKey]
+        const scoresResponse = profile.scoresByUserAndType[userTableKey]
+
         return <div className="user-page">
             <h1>{user.name}</h1>
             <div>
@@ -122,8 +123,8 @@ export class User extends React.Component<Props, State> {
             {this.state.isLoading
                 ? <div className="score-loading">Loading...</div>
                 : hasScores && <React.Fragment>
-                    <ScoresOverTime scores={scoresResponse!.scores} />
-                    <div className="scores">{scoresResponse!.scores.map(score => <Score key={score.id} score={score} />)}</div>
+                    <ScoresOverTime scores={scoresResponse} />
+                    <div className="scores">{scoresResponse.map(score => <Score key={score.id} score={score} />)}</div>
                 </React.Fragment>
             }
         </div>

@@ -2,59 +2,44 @@ import { ActionObject } from '../types'
 import { AT } from '../types/ActionTypes'
 import * as models from '../types/models'
 import { ThunkAction } from 'redux-thunk'
-import { microsoftProvider } from '../providers/microsoft'
-import RSA from 'react-simple-auth'
+import { makeGraphqlRequest } from '../services/graphql'
 
-console.log(`REACT_APP_ENV: `, process.env.REACT_APP_ENV)
-const baseUri = process.env.REACT_APP_ENV === 'development'
-    ? 'http://localhost:4000/'
-    : 'https://schultztables.azurewebsites.net'
-    
 export const getUserScoresAsync = (): ActionObject =>
-({
-    type: AT.GET_USER_SCORES_ASYNC
-})
+    ({
+        type: AT.GET_USER_SCORES_ASYNC
+    })
 
-export const getUserScoresFulfilled = (userId: string, tableTypeId: string, scoresResponse: models.IScoresResponse): ActionObject =>
-({
-    type: AT.GET_USER_SCORES_FULFILLED,
-    userId,
-    tableTypeId,
-    scoresResponse
-})
+export const getUserScoresFulfilled = (userId: string, tableTypeId: string, scores: models.IScore[]): ActionObject =>
+    ({
+        type: AT.GET_USER_SCORES_FULFILLED,
+        userId,
+        tableTypeId,
+        scores
+    })
 
 export const getUserScoresRejected = (reason: string): ActionObject =>
-({
-    type: AT.GET_USER_SCORES_REJECTED,
-    reason
-})
+    ({
+        type: AT.GET_USER_SCORES_REJECTED,
+        reason
+    })
 
-export const getUserScoresThunkAsync = (tableTypeId: string, userId: string): ThunkAction<any, any, any> => {
+export const getUserScoresThunkAsync = (tableTypeId: string, user: models.IUser): ThunkAction<any, any, any> => {
     return async (dispatch) => {
         try {
-            const response = await fetch(baseUri, {
-                "credentials": "omit",
-                "headers": {
-                    "accept": "*/*",
-                    "accept-language": "en-US,en;q=0.9,ko;q=0.8",
-                    "cache-control": "no-cache",
-                    "content-type": "application/json",
-                    'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`,
-                    "pragma": "no-cache",
-                    "sec-metadata": "destination=\"\", site=same-origin"
-                },
-                "body": JSON.stringify({
-                    operationName: "start",
-                    variables:{},
-                    query: `mutation start {
-                        start (ignored: "") {
-                            value
-                        }
-                    }`
-                }),
-                "method": "POST",
-                "mode": "cors"
-            })
+            const response = await makeGraphqlRequest(
+                null,
+                `{
+                    userScores(userId:"76440ce3-e323-4243-9e70-13a3cdbfb172"){
+                      id
+                      userId
+                      duration
+                      sequence {
+                        correct
+                        time
+                      }
+                      tableTypeId
+                    }
+                  }`)
 
             if (!response.ok) {
                 console.log(`status test: `, response.statusText)
@@ -62,14 +47,14 @@ export const getUserScoresThunkAsync = (tableTypeId: string, userId: string): Th
                 throw new Error(text)
             }
 
-            const json: models.IScoresResponse = await response.json()
+            const json: models.IGraphQlResponse<{ userScores: models.IScore[] }> = await response.json()
             console.log({ userScores: json })
-            json.scores.forEach(score => {
-                const user = json.users.find(u => u.id === score.userId)
+            const scores: models.IScore[] = json.data.userScores
+            scores.forEach(score => {
                 score.user = user
             })
 
-            dispatch(getUserScoresFulfilled(userId, tableTypeId, json))
+            dispatch(getUserScoresFulfilled(user.id, tableTypeId, scores))
         }
         catch (error) {
             console.error(error)

@@ -135,7 +135,7 @@ export const addScoreThunkAsync = (scoreRequest: models.IScoreRequest, user: mod
             }
             const json = await response.json();
             if (json.errors) {
-                
+
             }
             const score: models.IScoreGraphql = json.data.addScore;
             console.log(`Score Added: `, score);
@@ -182,13 +182,34 @@ export const getScoresRejected = (reason: string): ActionObject =>
 export const getScoresThunkAsync = (tableTypeId: string): ThunkAction<any, any, any> => {
     return async (dispatch) => {
         try {
-            const response = await fetch(`${baseUri}/api/scores?orderByDuration=true&tableTypeId=${encodeURIComponent(tableTypeId)}`, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`
-                }
-            });
+            const response = await makeGraphqlRequest(
+                null,
+                `{
+                    scores(tableTypeId: "8khL0PAzn1fLljSPPp6eGpcIHqbA6VPSHdkHGUeRb/s=") {
+                      users {
+                        id
+                        email
+                        name
+                      }
+                      scores {
+                        id
+                        userId
+                        startTime
+                        endTime
+                        sequence {
+                          cell {
+                            x
+                            y
+                            text
+                          }
+                          time
+                          correct
+                        }
+                        tableTypeId
+                        tableLayoutId
+                      }
+                    }
+                  }`)
 
             if (!response.ok) {
                 console.log(`status test: `, response.statusText)
@@ -196,13 +217,12 @@ export const getScoresThunkAsync = (tableTypeId: string): ThunkAction<any, any, 
                 throw new Error(text)
             }
 
-            const json = await response.json();
-            const scoresResponse: models.IScoresResponse = json;
-            scoresResponse.scores.forEach(score => {
-                const user = scoresResponse.users.find(u => u.id === score.userId);
+            const json: models.IGraphQlResponse<{ scores: models.IScoresResponse }> = await response.json();
+            json.data.scores.scores.forEach(score => {
+                const user = json.data.scores.users.find(u => u.id === score.userId);
                 score.user = user;
             });
-            dispatch(getScoresFulfilled(tableTypeId, scoresResponse));
+            dispatch(getScoresFulfilled(tableTypeId, json.data.scores));
         }
         catch (error) {
             console.error(error);

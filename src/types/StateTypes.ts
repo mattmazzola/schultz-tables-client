@@ -9,7 +9,7 @@ export type UsersState = models.IUser[]
 
 export type ProfileState = {
     tableTypes: models.ITableType[]
-    scoresByUserAndType: Map<string, models.IScoresResponse>
+    scoresByUserAndType: { [key: string]: models.IScore[] }
 }
 
 export interface UserState extends models.IUser{
