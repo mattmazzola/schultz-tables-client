@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { logout, getTableTypesThunkAsync, getUserScoresThunkAsync } from '../actions'
 import { ReduxState } from '../types'
 import Score from '../components/Score'
+import { NavLink } from 'react-router-dom'
 import './User.css'
 import { getUserTableTypeKey } from '../services/utilities';
 import ScoresOverTime from '../components/ScoresOverTime'
@@ -98,14 +99,18 @@ export class User extends React.Component<Props, State> {
         const { user } = this.state
         const { user: loggedInUser, profile } = this.props
         const userTableKey = getUserTableTypeKey(user.id, this.state.tableTypeIdSelected)
-        const hasScores = profile.scoresByUserAndType[userTableKey]
         const scoresResponse = profile.scoresByUserAndType[userTableKey]
+        const hasScores = scoresResponse && scoresResponse.length > 1
 
         return <div className="user-page">
             <h1>{user.name}</h1>
-            <div>
-                {loggedInUser && loggedInUser.id === user.id && <button className="button-logout" type="button" onClick={this.onClickLogout}>Logout</button>}
-            </div>
+            {loggedInUser && loggedInUser.id === user.id
+                ? <div>
+                    <button className="button-logout" type="button" onClick={this.onClickLogout}>Logout</button>
+                </div>
+                : <NavLink className="link" to="/users" exact={true}>
+                    Back
+                </NavLink>}
             <h2>User Scores</h2>
             <div className="scores-types">
                 {this.props.profile.tableTypes.length === 0
@@ -122,10 +127,12 @@ export class User extends React.Component<Props, State> {
             </div>
             {this.state.isLoading
                 ? <div className="score-loading">Loading...</div>
-                : hasScores && <React.Fragment>
-                    <ScoresOverTime scores={scoresResponse} />
-                    <div className="scores">{scoresResponse.map(score => <Score key={score.id} score={score} />)}</div>
-                </React.Fragment>
+                : !hasScores
+                    ? <div>No scores for this user on this type of table</div>
+                    : <React.Fragment>
+                        <ScoresOverTime scores={scoresResponse} />
+                        <div className="scores">{scoresResponse.map(score => <Score key={score.id} score={score} />)}</div>
+                    </React.Fragment>
             }
         </div>
     }

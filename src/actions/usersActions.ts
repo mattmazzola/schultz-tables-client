@@ -4,12 +4,6 @@ import * as models from '../types/models'
 import { ThunkAction } from 'redux-thunk'
 import { makeGraphqlRequest } from '../services/graphql'
 
-const baseUri = process.env.REACT_APP_ENV === 'development'
-    ? 'https://localhost:44311'
-    : 'https://schultztables.azurewebsites.net'
-    
-console.log(`using baseUri: `, baseUri)
-
 export const getUsersAsync = (): ActionObject =>
     ({
         type: AT.GET_USERS_ASYNC
