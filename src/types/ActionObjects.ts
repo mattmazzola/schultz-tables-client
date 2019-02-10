@@ -109,7 +109,7 @@ export interface GetUserScoresFulfilledAction {
     type: AT.GET_USER_SCORES_FULFILLED
     userId: string
     tableTypeId: string
-    scoresResponse: models.IScoresResponse
+    scores: models.IScore[]
 }
 
 export interface GetUserScoresRejectedAction {

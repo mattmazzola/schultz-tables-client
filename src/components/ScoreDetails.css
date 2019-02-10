@@ -35,6 +35,10 @@
 {
     text-align: center;
 }
+.score-details .sequence .text-right
+{
+    text-align: right;
+}
 
 .score-details .material-icons {
     vertical-align: sub;

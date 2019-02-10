@@ -41,8 +41,10 @@ class Score extends React.Component<Props, State> {
         this.setState({
             isDetailsLoading: true
         })
-        const getScoreDetails: (id: string) => Promise<models.IScore> = this.props.getScoreDetailsThunkAsync as any
-        const scoreDetails = await getScoreDetails(score.id)
+        const getScoreDetails: (id: string) => Promise<models.IGraphQlResponse<{ score: models.IScore }>> = this.props.getScoreDetailsThunkAsync as any
+        const json = await getScoreDetails(score.id)
+
+        const scoreDetails = json.data.score
 
         this.setState({
             scoreDetails,
@@ -52,10 +54,11 @@ class Score extends React.Component<Props, State> {
 
     render() {
         const { score } = this.props
+        console.log({ score })
         return (
             <div className="score">
                 <div className="score-preview" onClick={() => this.onClickScore(score)}>
-                    <span className="score-preview__start-time">{moment(score.startTime).format('ll')}</span>
+                    <span className="score-preview__start-time">{moment(score.startTime).format('lll')}</span>
                     <span className="score-preview__duration">{moment.duration(score.durationMilliseconds).asSeconds()}</span>
                     <span>{score.user ? score.user.name : 'Unknown'}</span>
                     <span className="score-preview__icon">

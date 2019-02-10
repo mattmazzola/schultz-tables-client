@@ -88,7 +88,6 @@ export class Home extends React.Component<Props, State> {
   state = initialState
 
   onClickStart() {
-    console.log(`onClickStart`)
     const startScoreThunkAsync: () => Promise<string> = this.props.startScoreThunkAsync as any
     
     const gameTypeSelected = this.state.gameTypes.find(t => t.id === this.state.gameTypeIdSelected)

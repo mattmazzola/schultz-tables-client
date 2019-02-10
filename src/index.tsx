@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import App from './routes/App'
-import { unregister } from './registerServiceWorker'
 import './index.css'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
@@ -19,4 +18,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root') as HTMLElement
 )
-unregister()

@@ -42,7 +42,7 @@ class Scores extends React.Component<Props, State> {
         isLoading: false
       })
 
-      if (!this.props.scores.scoresByType.get(tableTypeIdSelected)) {
+      if (!this.props.scores.scoresByType[tableTypeIdSelected]) {
         this.props.getScoresThunkAsync(tableTypeIdSelected)
       }
     }
@@ -51,7 +51,7 @@ class Scores extends React.Component<Props, State> {
   onChangeTableType = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const tableTypeIdSelected = event.target.value
 
-    const existingScores = this.props.scores.scoresByType.get(tableTypeIdSelected)
+    const existingScores = this.props.scores.scoresByType[tableTypeIdSelected]
     if (!Array.isArray(existingScores) || existingScores.length === 0) {
       this.props.getScoresThunkAsync(tableTypeIdSelected)
     }
@@ -73,7 +73,7 @@ class Scores extends React.Component<Props, State> {
   }
 
   render() {
-    const scoresByType = this.props.scores.scoresByType.get(this.state.tableTypeIdSelected)
+    const scoresByType = this.props.scores.scoresByType[this.state.tableTypeIdSelected]
     return (
       <div className="scores-page">
         <div className="scores-types">

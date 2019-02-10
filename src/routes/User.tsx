@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { logout, getTableTypesThunkAsync, getUserScoresThunkAsync } from '../actions'
 import { ReduxState } from '../types'
 import Score from '../components/Score'
+import { NavLink } from 'react-router-dom'
 import './User.css'
 import { getUserTableTypeKey } from '../services/utilities';
 import ScoresOverTime from '../components/ScoresOverTime'
@@ -15,13 +16,13 @@ interface ReceivedProps extends RouteComponentProps<any> {
 }
 
 interface State {
-    user: models.IUser | null
+    user: models.IUser
     isLoading: boolean
     tableTypeIdSelected: string
 }
 
 const initialState: State = {
-    user: null,
+    user: null!,
     isLoading: false,
     tableTypeIdSelected: ''
 }
@@ -56,6 +57,13 @@ export class User extends React.Component<Props, State> {
     }
 
     componentWillReceiveProps(nextProps: Props) {
+        const user: models.IUser | null = nextProps.location.state && nextProps.location.state.user
+        if (user) {
+            this.setState({
+                user
+            })
+        }
+
         if (this.state.isLoading === true && nextProps.profile.tableTypes.length > 0) {
             const tableTypeIdSelected = nextProps.profile.tableTypes[0].id
             this.setState({
@@ -63,8 +71,8 @@ export class User extends React.Component<Props, State> {
                 isLoading: false
             })
 
-            if (!this.props.profile.scoresByUserAndType.get(tableTypeIdSelected)) {
-                this.props.getUserScoresThunkAsync(tableTypeIdSelected, this.props.user.id)
+            if (!this.props.profile.scoresByUserAndType[tableTypeIdSelected] && user) {
+                this.props.getUserScoresThunkAsync(tableTypeIdSelected, user)
             }
         }
     }
@@ -72,10 +80,10 @@ export class User extends React.Component<Props, State> {
     onChangeTableType = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const tableTypeIdSelected = event.target.value
 
-        const key = getUserTableTypeKey(this.props.user.id, tableTypeIdSelected)
-        const existingUserScores = this.props.profile.scoresByUserAndType.get(key)
-        if (!existingUserScores || existingUserScores.scores.length === 0) {
-            this.props.getUserScoresThunkAsync(tableTypeIdSelected, this.props.user.id)
+        const key = getUserTableTypeKey(this.state.user.id, tableTypeIdSelected)
+        const existingUserScores = this.props.profile.scoresByUserAndType[key]
+        if (!existingUserScores || existingUserScores.length === 0) {
+            this.props.getUserScoresThunkAsync(tableTypeIdSelected, this.state.user)
         }
 
         this.setState({
@@ -88,23 +96,28 @@ export class User extends React.Component<Props, State> {
     }
 
     render() {
-        const { user, profile } = this.props
+        const { user } = this.state
+        const { user: loggedInUser, profile } = this.props
         const userTableKey = getUserTableTypeKey(user.id, this.state.tableTypeIdSelected)
-        const hasScores = profile.scoresByUserAndType.has(userTableKey)
-        const scoresResponse = profile.scoresByUserAndType.get(userTableKey)
-        const routerUser = this.state.user
+        const scoresResponse = profile.scoresByUserAndType[userTableKey]
+        const hasScores = scoresResponse && scoresResponse.length > 1
+
         return <div className="user-page">
             <h1>{user.name}</h1>
-            <div>
-                {routerUser && routerUser.id === user.id && <button className="button-logout" type="button" onClick={this.onClickLogout}>Logout</button>}
-            </div>
+            {loggedInUser && loggedInUser.id === user.id
+                ? <div>
+                    <button className="button-logout" type="button" onClick={this.onClickLogout}>Logout</button>
+                </div>
+                : <NavLink className="link" to="/users" exact={true}>
+                    Back
+                </NavLink>}
             <h2>User Scores</h2>
             <div className="scores-types">
                 {this.props.profile.tableTypes.length === 0
                     ? <div>Loading...</div>
                     : <select onChange={this.onChangeTableType} value={this.state.tableTypeIdSelected}>
-                        {this.props.profile.tableTypes.map(tableType =>
-                            <option key={tableType.id} value={tableType.id}>{tableType.width} x {tableType.height} - {tableType.properties
+                        {this.props.profile.tableTypes.map((tableType, i) =>
+                            <option key={`${i}_${tableType.id}`} value={tableType.id}>{tableType.width} x {tableType.height} - {tableType.properties
                                 .filter(({ key }) => ['symbols', 'fontColor', 'cellColor'].includes(key))
                                 .map(({ value }) => `${value}`)
                                 .join(', ')}
@@ -114,10 +127,12 @@ export class User extends React.Component<Props, State> {
             </div>
             {this.state.isLoading
                 ? <div className="score-loading">Loading...</div>
-                : hasScores && <React.Fragment>
-                    <ScoresOverTime scores={scoresResponse!.scores} />
-                    <div className="scores">{scoresResponse!.scores.map(score => <Score key={score.id} score={score} />)}</div>
-                </React.Fragment>
+                : !hasScores
+                    ? <div>No scores for this user on this type of table</div>
+                    : <React.Fragment>
+                        <ScoresOverTime scores={scoresResponse} />
+                        <div className="scores">{scoresResponse.map(score => <Score key={score.id} score={score} />)}</div>
+                    </React.Fragment>
             }
         </div>
     }

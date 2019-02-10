@@ -21,9 +21,9 @@ export interface ICell {
     classes: string[]
 }
 
-export interface IUserSelection {
+export interface IUserSelection<T = Date> {
     correct: boolean
-    time: Date
+    time: T
     cell: ICell
 }
 
@@ -58,6 +58,17 @@ export interface IOption<T> {
     value: T
 }
 
+export interface IMongoError {
+    extensions: any
+    locations: any
+    message: string
+    path: string[]
+}
+export interface IGraphQlResponse<T> {
+    data: T
+    errors: IMongoError[]
+}
+
 export interface IUser {
     name: string
     id: string
@@ -79,6 +90,11 @@ export interface IScore {
     sequence: IUserSelection[]
     tableLayout: ITableLayout
     tableType: ITableType
+}
+
+export interface IScoreGraphql extends IScore {
+    tableLayoutId: string
+    tableTypeId: string
 }
 
 export interface ITableLayout {
@@ -126,8 +142,26 @@ export interface IScoreResponse {
     userId: string
 }
 
+export interface IScoreRequestGraphql {
+    // duration: number
+    endTime: number
+    expectedSequence: string[]
+    randomizedSequence: string[]
+    signedStartTime: string
+    startTime: number
+    tableHeight: number
+    tableWidth: number
+    tableProperties: KVPair<string, string>[]
+    userSequence: IUserSelection<number>[]
+}
+
 export interface IStartScoreResponse {
     value: string
+    data: {
+        start: {
+            value: string
+        }
+    }
 }
 
 export interface ITableProperty {

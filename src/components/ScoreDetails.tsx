@@ -34,7 +34,7 @@ class ScoreDetails extends React.Component<Props, State> {
             ))
 
         const horizontalTicks = tableLayout.expectedSequence
-        const maxYAxis = Math.ceil(this.props.durationMilliseconds/1000) + 1
+        const maxYAxis = Math.ceil(this.props.durationMilliseconds / 1000) + 1
         const verticalTicks = Array(maxYAxis).fill(0).map((_, i) => i)
         const tableForPreview: models.ITable = {
             classes: [],
@@ -42,13 +42,14 @@ class ScoreDetails extends React.Component<Props, State> {
             height: tableLayout.height,
             expectedSequence: tableLayout.expectedSequence,
             cells: tableLayout.randomizedSequence.reduce<models.ICell[]>((cells, symbol, i, seq) => {
-                cells.push({
-                    classes: [],
-                    text: symbol,
-                    x: i,
-                    y: i
-                })
-                return cells
+                return [
+                    ...cells,
+                    {
+                        classes: [],
+                        text: symbol,
+                        x: i,
+                        y: i
+                    }]
             }, [])
         }
 
@@ -88,11 +89,11 @@ class ScoreDetails extends React.Component<Props, State> {
                                 <i className="material-icons">access_time</i>
                             </div>
 
-                            {scoreDetails.sequence.map((o,i,seq) => {
+                            {scoreDetails.sequence.map((o, i, seq) => {
                                 const totalDuration = getTimeDifference(o.time as any, scoreDetails.startTime as any)
                                 const duration = i === 0
                                     ? getTimeDifference(o.time as any, scoreDetails.startTime as any)
-                                    : getTimeDifference(o.time as any, seq[i-1].time as any)
+                                    : getTimeDifference(o.time as any, seq[i - 1].time as any)
 
 
                                 return (
@@ -103,8 +104,8 @@ class ScoreDetails extends React.Component<Props, State> {
                                                 : <i className="material-icons incorrect">error_outline</i>}
                                         </div>
                                         <div className="text-center">{o.cell.text}</div>
-                                        <div>+{duration}</div>
-                                        <div>+{totalDuration}</div>
+                                        <div>+{duration.toFixed(3)}</div>
+                                        <div className="text-right">{totalDuration.toFixed(3)}</div>
                                     </React.Fragment>
                                 )
                             })}
