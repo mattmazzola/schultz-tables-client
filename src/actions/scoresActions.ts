@@ -5,12 +5,6 @@ import { ThunkAction } from 'redux-thunk'
 import { makeGraphqlRequest, makeGraphqlMutation } from '../services/graphql'
 import * as utilities from '../services/utilities'
 
-const baseUri = process.env.REACT_APP_ENV === 'development'
-    ? 'http://localhost:4000'
-    : 'https://schultztables.azurewebsites.net'
-
-console.log(`using baseUri: `, baseUri)
-
 export const startScoreAsync = (): ActionObject =>
     ({
         type: AT.START_SCORE_ASYNC

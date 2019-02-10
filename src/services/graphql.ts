@@ -1,8 +1,9 @@
 import RSA from 'react-simple-auth'
 import { microsoftProvider } from '../providers/microsoft'
+const baseUrl = `https://schultztablesgraphql.azurewebsites.net/`
 
 export const makeGraphqlRequest = async (operationName: string | null, query: string) => {
-    return await fetch(`http://localhost:4000`, {
+    return await fetch(baseUrl, {
         "credentials": "omit",
         "headers": {
             "accept": "*/*",
@@ -22,7 +23,7 @@ export const makeGraphqlRequest = async (operationName: string | null, query: st
 }
 
 export const makeGraphqlMutation = async (operationName: string, mutation: string) => {
-    return await fetch(`http://localhost:4000`, {
+    return await fetch(baseUrl, {
         "credentials": "omit",
         "headers": {
             "accept": "*/*",
